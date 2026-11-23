@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – Enterprise360</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card" style="max-width:500px">
+    <div class="login-logo"><i class="bi bi-person-plus text-white"></i></div>
+    <h4 class="text-center fw-bold mb-1">Create Account</h4>
+    <p class="text-center text-muted mb-4" style="font-size:.88rem">Join Enterprise360</p>
+    <form id="registerForm" novalidate>
+      <div class="row g-3">
+        <div class="col-6">
+          <label class="form-label">First Name</label>
+          <input type="text" id="firstName" class="form-control" placeholder="John" required>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Last Name</label>
+          <input type="text" id="lastName" class="form-control" placeholder="Doe" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="john@company.com" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Role</label>
+          <select id="role" class="form-select">
+            <option value="Employee">Employee</option>
+            <option value="HR Manager">HR Manager</option>
+            <option value="Project Manager">Project Manager</option>
+            <option value="Finance Manager">Finance Manager</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" id="password" class="form-control" placeholder="Min 6 characters" required minlength="6">
+            <button class="btn btn-outline-secondary" type="button" id="togglePass"><i class="bi bi-eye"></i></button>
+          </div>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" id="confirmPassword" class="form-control" placeholder="Re-enter password" required>
+        </div>
+      </div>
+      <div id="regError" class="alert alert-danger py-2 mt-3 d-none" style="font-size:.85rem"></div>
+      <button type="submit" class="btn btn-primary w-100 py-2 mt-3">
+        <i class="bi bi-person-check me-2"></i>Create Account
+      </button>
+    </form>
+    <p class="text-center mt-3 mb-0" style="font-size:.82rem">
+      Already have an account? <a href="login.html" class="text-primary text-decoration-none">Sign In</a>
+    </p>
+  </div>
+</div>
+<div id="toast-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  const { Storage } = window.E360;
+  const { showToast, genId } = window.E360.Utils;
+  const { getSampleData } = window.E360;
+
+  const theme = localStorage.getItem('e360_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+
+  document.getElementById('togglePass').addEventListener('click', function() {
+    const inp = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'bi bi-eye-slash'; }
+    else { inp.type = 'password'; icon.className = 'bi bi-eye'; }
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const role = document.getElementById('role').value;
+    const pass = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const errEl = document.getElementById('regError');
+
+    if (!fn || !ln || !email || !pass) { errEl.textContent = 'All fields are required.'; errEl.classList.remove('d-none'); return; }
+    if (pass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.classList.remove('d-none'); return; }
+    if (pass !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.classList.remove('d-none'); return; }
+    errEl.classList.add('d-none');
+
+    const data = await getSampleData();
+    const users = Storage.get('users', data.users || []);
+    if (users.find(u => u.email === email)) { errEl.textContent = 'Email already registered.'; errEl.classList.remove('d-none'); return; }
+
+    const newUser = { id: genId(), name: `${fn} ${ln}`, email, password: pass, role, avatar: '', department: '', phone: '', joinDate: new Date().toISOString().split('T')[0] };
+    users.push(newUser);
+    Storage.set('users', users);
+    showToast('Account created! You can now sign in.', 'success');
+    setTimeout(() => window.location.href = 'login.html', 1000);
+  });
+</script>
+</body>
+</html>

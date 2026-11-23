@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – Enterprise360</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo"><i class="bi bi-buildings text-white"></i></div>
+    <h4 class="text-center fw-bold mb-1">Enterprise360</h4>
+    <p class="text-center text-muted mb-4" style="font-size:.88rem">Sign in to your account</p>
+
+    <!-- Demo Role Badges -->
+    <div class="mb-4">
+      <p class="text-muted mb-2" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Quick login (demo)</p>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-sm btn-outline-primary quick-login" data-email="admin@enterprise360.com" data-pass="admin123">Super Admin</button>
+        <button class="btn btn-sm btn-outline-success quick-login" data-email="hr@enterprise360.com" data-pass="hr123">HR Manager</button>
+        <button class="btn btn-sm btn-outline-info quick-login" data-email="pm@enterprise360.com" data-pass="pm123">Project Mgr</button>
+        <button class="btn btn-sm btn-outline-secondary quick-login" data-email="emp@enterprise360.com" data-pass="emp123">Employee</button>
+        <button class="btn btn-sm btn-outline-warning quick-login" data-email="finance@enterprise360.com" data-pass="fin123">Finance Mgr</button>
+      </div>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label">Email Address</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input type="email" id="email" class="form-control" placeholder="email@company.com" required>
+        </div>
+        <div class="invalid-feedback">Please enter a valid email.</div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label d-flex justify-content-between">
+          Password
+          <a href="forgot-password.html" class="text-primary text-decoration-none" style="font-size:.82rem">Forgot password?</a>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+          <button class="btn btn-outline-secondary" type="button" id="togglePass"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+      <div id="loginError" class="alert alert-danger py-2 d-none" style="font-size:.85rem"></div>
+      <button type="submit" class="btn btn-primary w-100 py-2" id="loginBtn">
+        <span id="loginSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
+        Sign In
+      </button>
+    </form>
+    <p class="text-center mt-4 mb-0" style="font-size:.82rem">
+      Don't have an account?
+      <a href="register.html" class="text-primary text-decoration-none">Register</a>
+    </p>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  const { Auth } = window.E360;
+  const { showToast } = window.E360.Utils;
+
+  // Apply saved theme
+  const theme = localStorage.getItem('e360_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+
+  // Quick login buttons
+  document.querySelectorAll('.quick-login').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('email').value = btn.dataset.email;
+      document.getElementById('password').value = btn.dataset.pass;
+    });
+  });
+
+  // Toggle password visibility
+  document.getElementById('togglePass').addEventListener('click', function() {
+    const inp = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'bi bi-eye-slash'; }
+    else { inp.type = 'password'; icon.className = 'bi bi-eye'; }
+  });
+
+  // Form submit
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errEl = document.getElementById('loginError');
+    const spinner = document.getElementById('loginSpinner');
+    const btn = document.getElementById('loginBtn');
+
+    errEl.classList.add('d-none');
+    spinner.classList.remove('d-none');
+    btn.disabled = true;
+
+    // Fast response
+    await new Promise(r => setTimeout(r, 200));
+    const result = await Auth.login(email, password);
+    spinner.classList.add('d-none');
+    btn.disabled = false;
+
+    if (result.ok) {
+      showToast(`Welcome back, ${result.user.name}!`, 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 500);
+    } else {
+      errEl.textContent = result.message;
+      errEl.classList.remove('d-none');
+    }
+  });
+</script>
+</body>
+</html>

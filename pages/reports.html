@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports – Enterprise360</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+<div class="app-wrapper">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main-content" id="mainContent">
+    <header class="topbar" id="topbar"></header>
+    <main class="page-content">
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div><h5 class="mb-1 fw-bold">Reports & Analytics</h5><p class="text-muted mb-0" style="font-size:.85rem">Insights across all modules</p></div>
+        <div class="d-flex gap-2">
+          <input type="date" class="form-control" id="fromDate" style="width:150px">
+          <input type="date" class="form-control" id="toDate" style="width:150px">
+          <button class="btn btn-outline-secondary" id="exportAllBtn"><i class="bi bi-download me-1"></i>Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Report Type Tabs -->
+      <ul class="nav nav-tabs mb-3" id="reportTabs">
+        <li class="nav-item"><button class="nav-link active" data-tab="employee">Employee</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="project">Project</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="sales">Sales</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="financial">Financial</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="attendance">Attendance</button></li>
+      </ul>
+
+      <!-- Employee Report -->
+      <div id="employee-panel">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Employees by Department</span></div><div class="card-body"><div style="height:220px"><canvas id="empDeptChart"></canvas></div></div></div></div>
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Employees by Status</span></div><div class="card-body"><div style="height:220px"><canvas id="empStatusChart"></canvas></div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Employee Report</span></div>
+          <div class="table-wrapper"><table class="table table-hover mb-0">
+            <thead><tr><th>Name</th><th>Department</th><th>Designation</th><th>Join Date</th><th>Salary</th><th>Status</th></tr></thead>
+            <tbody id="empReportTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Project Report -->
+      <div id="project-panel" class="d-none">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Project Status Distribution</span></div><div class="card-body"><div style="height:220px"><canvas id="projStatusChart"></canvas></div></div></div></div>
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Progress Overview</span></div><div class="card-body" id="projProgressOverview"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Project Report</span></div>
+          <div class="table-wrapper"><table class="table table-hover mb-0">
+            <thead><tr><th>Project</th><th>Client</th><th>Manager</th><th>Status</th><th>Priority</th><th>Progress</th><th>Due Date</th></tr></thead>
+            <tbody id="projReportTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Sales Report -->
+      <div id="sales-panel" class="d-none">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-8"><div class="card"><div class="card-header"><span class="card-title">Customer Pipeline Value</span></div><div class="card-body"><div style="height:220px"><canvas id="salesChart"></canvas></div></div></div></div>
+          <div class="col-lg-4"><div class="card"><div class="card-header"><span class="card-title">Lead Conversion</span></div><div class="card-body"><div style="height:220px"><canvas id="leadChart"></canvas></div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Customer Report</span></div>
+          <div class="table-wrapper"><table class="table table-hover mb-0">
+            <thead><tr><th>Company</th><th>Contact</th><th>Type</th><th>Lead Status</th><th>Value</th></tr></thead>
+            <tbody id="custReportTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Financial Report -->
+      <div id="financial-panel" class="d-none">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-8"><div class="card"><div class="card-header"><span class="card-title">Monthly Financial Trend</span></div><div class="card-body"><div style="height:220px"><canvas id="finTrendChart"></canvas></div></div></div></div>
+          <div class="col-lg-4"><div class="card"><div class="card-header"><span class="card-title">Income vs Expense</span></div><div class="card-body d-flex flex-column align-items-center justify-content-center"><div style="height:180px;width:180px"><canvas id="finPieChart"></canvas></div><div id="finPieLegend" class="mt-2"></div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Transaction Report</span></div>
+          <div class="table-wrapper"><table class="table table-hover mb-0">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="finReportTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Attendance Report -->
+      <div id="attendance-panel" class="d-none">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Attendance by Status</span></div><div class="card-body"><div style="height:220px"><canvas id="attChart"></canvas></div></div></div></div>
+          <div class="col-lg-6"><div class="card"><div class="card-header"><span class="card-title">Leave Status</span></div><div class="card-body"><div style="height:220px"><canvas id="leaveChart"></canvas></div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Attendance Summary</span></div>
+          <div class="table-wrapper"><table class="table table-hover mb-0">
+            <thead><tr><th>Employee</th><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th></tr></thead>
+            <tbody id="attReportTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+<script>
+(function() {
+  const { Storage, Session } = window.E360;
+  const { showToast, genId, formatDate, formatDateTime, timeAgo, today, formatCurrency, getInitials, avatarColor, avatarHtml, statusBadge, priorityBadge, debounce, throttle, confirm, paginate, renderPagination, searchFilter, sortBy, exportCSV, previewImage, fetchData, skeletonRow, showLoading } = window.E360.Utils;
+  const { Auth, getSampleData } = window.E360;
+  const { initPage, renderSidebar, renderTopbar } = window.E360.App;
+
+
+  let employees=[], projects=[], customers=[], transactions=[], attendance=[], leaves=[];
+  let activeTab='employee';
+
+  async function init() {
+    const user = await initPage('Reports', 'reports.html');
+    if (!user) return;
+    const data = await getSampleData();
+    employees    = Storage.get('employees', data.employees);
+    projects     = Storage.get('projects', data.projects);
+    customers    = Storage.get('customers', data.customers);
+    transactions = Storage.get('transactions', data.transactions);
+    attendance   = Storage.get('attendance', data.attendance);
+    leaves       = Storage.get('leaves', data.leaves);
+
+    const today = new Date();
+    const fromD = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+    document.getElementById('fromDate').value = fromD;
+    document.getElementById('toDate').value = today.toISOString().split('T')[0];
+
+    renderEmployeeReport();
+
+    document.querySelectorAll('#reportTabs .nav-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#reportTabs .nav-link').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTab = btn.dataset.tab;
+        ['employee','project','sales','financial','attendance'].forEach(t => document.getElementById(t+'-panel').classList.toggle('d-none', t!==activeTab));
+        renderActiveReport();
+      });
+    });
+
+    document.getElementById('fromDate').addEventListener('change', renderActiveReport);
+    document.getElementById('toDate').addEventListener('change', renderActiveReport);
+    document.getElementById('exportAllBtn').addEventListener('click', exportCurrent);
+  }
+
+  function renderActiveReport() {
+    const fns = { employee:renderEmployeeReport, project:renderProjectReport, sales:renderSalesReport, financial:renderFinancialReport, attendance:renderAttReport };
+    if (fns[activeTab]) fns[activeTab]();
+  }
+
+  function makeChart(id,type,labels,datasets,opts={}) {
+    if(Chart.getChart(id)) Chart.getChart(id).destroy();
+    const textColor = document.documentElement.getAttribute('data-theme')==='dark'?'#94a3b8':'#64748b';
+    new Chart(document.getElementById(id).getContext('2d'),{type,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:textColor,font:{size:11}}}},scales:type==='pie'||type==='doughnut'?{}:{x:{ticks:{color:textColor}},y:{ticks:{color:textColor}}},...opts}});
+  }
+
+  function renderEmployeeReport() {
+    const depts={}, statuses={};
+    employees.forEach(e=>{depts[e.department]=(depts[e.department]||0)+1;statuses[e.status]=(statuses[e.status]||0)+1;});
+    const COLORS=['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6'];
+    makeChart('empDeptChart','bar',Object.keys(depts),[{label:'Employees',data:Object.values(depts),backgroundColor:'#4f46e5',borderRadius:4}]);
+    makeChart('empStatusChart','doughnut',Object.keys(statuses),[{data:Object.values(statuses),backgroundColor:['#10b981','#ef4444'],borderWidth:0}]);
+    const statusCls={Active:'badge-active',Inactive:'badge-inactive'};
+    document.getElementById('empReportTable').innerHTML=employees.map(e=>`
+      <tr><td style="font-size:.85rem;font-weight:600">${e.name}</td><td style="font-size:.82rem">${e.department}</td><td style="font-size:.82rem">${e.designation}</td>
+      <td style="font-size:.82rem">${formatDate(e.joinDate)}</td><td style="font-size:.85rem">${formatCurrency(e.salary)}</td>
+      <td><span class="badge-status ${statusCls[e.status]||'badge-pending'}">${e.status}</span></td></tr>`).join('');
+  }
+
+  function renderProjectReport() {
+    const statuses={Planning:0,'In Progress':0,Completed:0};
+    projects.forEach(p=>{if(statuses[p.status]!==undefined)statuses[p.status]++;});
+    makeChart('projStatusChart','doughnut',Object.keys(statuses),[{data:Object.values(statuses),backgroundColor:['#f59e0b','#4f46e5','#10b981'],borderWidth:0}]);
+    document.getElementById('projProgressOverview').innerHTML=projects.map(p=>`
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <div style="font-size:.82rem;width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
+        <div class="progress flex-1" style="height:6px"><div class="progress-bar bg-primary" style="width:${p.progress}%"></div></div>
+        <span class="text-muted" style="font-size:.75rem;width:34px">${p.progress}%</span>
+      </div>`).join('');
+    const statusCls={Planning:'badge-pending','In Progress':'badge-inprogress',Completed:'badge-completed'};
+    const pCls={High:'priority-high',Medium:'priority-medium',Low:'priority-low'};
+    document.getElementById('projReportTable').innerHTML=projects.map(p=>`
+      <tr><td style="font-size:.85rem;font-weight:600">${p.name}</td><td style="font-size:.82rem">${p.client}</td><td style="font-size:.82rem">${p.manager}</td>
+      <td><span class="badge-status ${statusCls[p.status]||'badge-pending'}">${p.status}</span></td>
+      <td><span class="badge px-2 py-1 rounded ${pCls[p.priority]||''}" style="font-size:.72rem">${p.priority}</span></td>
+      <td><div class="d-flex align-items-center gap-2"><div class="progress" style="width:60px;height:5px"><div class="progress-bar bg-primary" style="width:${p.progress}%"></div></div><span style="font-size:.75rem">${p.progress}%</span></div></td>
+      <td style="font-size:.82rem">${formatDate(p.dueDate)}</td></tr>`).join('');
+  }
+
+  function renderSalesReport() {
+    const stages=['Prospect','Negotiation','Won','Lost'];
+    const vals=stages.map(s=>customers.filter(c=>c.leadStatus===s).reduce((t,c)=>t+c.value,0));
+    makeChart('salesChart','bar',stages,[{label:'Pipeline Value',data:vals,backgroundColor:['#3b82f6','#f59e0b','#10b981','#ef4444'],borderRadius:4}]);
+    const lData=stages.map(s=>customers.filter(c=>c.leadStatus===s).length);
+    makeChart('leadChart','doughnut',stages,[{data:lData,backgroundColor:['#3b82f6','#f59e0b','#10b981','#ef4444'],borderWidth:0}]);
+    const leadCls={Won:'badge-won',Lost:'badge-lost',Prospect:'badge-prospect',Negotiation:'badge-pending'};
+    document.getElementById('custReportTable').innerHTML=customers.map(c=>`
+      <tr><td style="font-size:.85rem;font-weight:600">${c.name}</td><td style="font-size:.82rem">${c.contact||'—'}</td>
+      <td style="font-size:.82rem">${c.type}</td>
+      <td><span class="badge-status ${leadCls[c.leadStatus]||'badge-pending'}">${c.leadStatus}</span></td>
+      <td style="font-size:.85rem;font-weight:600">${formatCurrency(c.value)}</td></tr>`).join('');
+  }
+
+  function renderFinancialReport() {
+    // 6-month trend
+    const labels=[],incomes=[],expenses=[];
+    for(let i=5;i>=0;i--){
+      const d=new Date(); d.setMonth(d.getMonth()-i);
+      const ym=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      labels.push(d.toLocaleString('en-US',{month:'short'}));
+      incomes.push(transactions.filter(t=>t.type==='Income'&&t.date.startsWith(ym)).reduce((s,t)=>s+t.amount,0));
+      expenses.push(transactions.filter(t=>t.type==='Expense'&&t.date.startsWith(ym)).reduce((s,t)=>s+t.amount,0));
+    }
+    makeChart('finTrendChart','line',labels,[{label:'Income',data:incomes,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.1)',fill:true,tension:.4},{label:'Expenses',data:expenses,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.1)',fill:true,tension:.4}]);
+    const totalIn=transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+t.amount,0);
+    const totalEx=transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+t.amount,0);
+    makeChart('finPieChart','doughnut',['Income','Expenses'],[{data:[totalIn,totalEx],backgroundColor:['#10b981','#ef4444'],borderWidth:0}]);
+    document.getElementById('finPieLegend').innerHTML=`<div style="font-size:.78rem;text-align:center"><span style="color:#10b981;font-weight:600">Income: ${formatCurrency(totalIn)}</span><br><span style="color:#ef4444;font-weight:600">Expenses: ${formatCurrency(totalEx)}</span></div>`;
+    const sCls={Paid:'badge-paid',Pending:'badge-pending'};
+    document.getElementById('finReportTable').innerHTML=transactions.map(t=>`
+      <tr><td style="font-size:.82rem">${formatDate(t.date)}</td><td style="font-size:.85rem">${t.description}</td>
+      <td style="font-size:.82rem">${t.category}</td>
+      <td><span class="badge ${t.type==='Income'?'bg-success':'bg-danger'} bg-opacity-10 ${t.type==='Income'?'text-success':'text-danger'}" style="font-size:.75rem">${t.type}</span></td>
+      <td style="font-size:.85rem;font-weight:600;color:${t.type==='Income'?'var(--success)':'var(--danger)'}">${formatCurrency(t.amount)}</td>
+      <td><span class="badge-status ${sCls[t.status]||'badge-pending'}">${t.status}</span></td></tr>`).join('');
+  }
+
+  function renderAttReport() {
+    const statuses={Present:0,Absent:0,Late:0,'Half Day':0};
+    attendance.forEach(a=>{if(statuses[a.status]!==undefined)statuses[a.status]++;});
+    makeChart('attChart','bar',Object.keys(statuses),[{label:'Count',data:Object.values(statuses),backgroundColor:['#10b981','#ef4444','#f59e0b','#3b82f6'],borderRadius:4}]);
+    const lStatus={Pending:0,Approved:0,Rejected:0};
+    leaves.forEach(l=>{if(lStatus[l.status]!==undefined)lStatus[l.status]++;});
+    makeChart('leaveChart','doughnut',Object.keys(lStatus),[{data:Object.values(lStatus),backgroundColor:['#f59e0b','#10b981','#ef4444'],borderWidth:0}]);
+    const sCls={Present:'badge-present',Absent:'badge-inactive',Late:'badge-late','Half Day':'badge-pending'};
+    document.getElementById('attReportTable').innerHTML=attendance.map(a=>`
+      <tr><td style="font-size:.85rem;font-weight:600">${a.employeeName}</td>
+      <td style="font-size:.82rem">${formatDate(a.date)}</td>
+      <td style="font-size:.82rem">${a.checkIn||'—'}</td>
+      <td style="font-size:.82rem">${a.checkOut||'—'}</td>
+      <td><span class="badge-status ${sCls[a.status]||'badge-pending'}">${a.status}</span></td></tr>`).join('');
+  }
+
+  function exportCurrent() {
+    const dataMap = { employee:employees, project:projects, sales:customers, financial:transactions, attendance:attendance };
+    exportCSV(dataMap[activeTab]||[], `${activeTab}-report.csv`);
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>

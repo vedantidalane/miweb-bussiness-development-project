@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Enterprise360</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+<div class="app-wrapper">
+  <aside id="sidebar" class="sidebar"></aside>
+  <div class="main-content" id="mainContent">
+    <header class="topbar" id="topbar"></header>
+    <main class="page-content">
+
+      <!-- Date Filter -->
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div>
+          <h5 class="mb-1 fw-bold">Overview</h5>
+          <p class="text-muted mb-0" style="font-size:.85rem" id="dateDisplay"></p>
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+          <input type="date" class="form-control form-control-sm" id="filterDate" style="width:160px">
+          <select class="form-select form-select-sm" id="filterPeriod" style="width:130px">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="row g-3 mb-4" id="statCards"></div>
+
+      <!-- Charts Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+          <div class="card h-100">
+            <div class="card-header">
+              <span class="card-title">Revenue vs Expenses</span>
+              <div class="d-flex gap-2">
+                <select class="form-select form-select-sm" id="chartPeriod" style="width:120px">
+                  <option value="6">Last 6 months</option>
+                  <option value="12">Last 12 months</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body"><div class="chart-container" style="height:260px"><canvas id="revenueChart"></canvas></div></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card h-100">
+            <div class="card-header"><span class="card-title">Project Status</span></div>
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+              <div class="chart-container" style="height:220px;width:220px"><canvas id="projectChart"></canvas></div>
+              <div id="projectLegend" class="d-flex flex-wrap gap-3 justify-content-center mt-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="row g-3">
+        <!-- Recent Activity -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Recent Activity</span>
+              <a href="notifications.html" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div id="activityList" style="max-height:340px;overflow-y:auto"></div>
+          </div>
+        </div>
+        <!-- Team & Projects -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Active Projects</span>
+              <a href="projects.html" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body" id="activeProjects"></div>
+          </div>
+        </div>
+        <!-- Employee Dept Chart -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Employees by Department</span></div>
+            <div class="card-body"><div class="chart-container" style="height:220px"><canvas id="deptChart"></canvas></div></div>
+          </div>
+        </div>
+        <!-- Pending Tasks -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Pending Tasks</span>
+              <a href="tasks.html" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0" id="pendingTasks" style="max-height:240px;overflow-y:auto"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+window.E360_DATA = {
+  "users": [
+    {
+      "id": 1,
+      "name": "Alex Johnson",
+      "email": "admin@enterprise360.com",
+      "password": "admin123",
+      "role": "Super Admin",
+      "avatar": "",
+      "department": "Administration",
+      "phone": "+1-555-0101",
+      "joinDate": "2020-01-15"
+    },
+    {
+      "id": 2,
+      "name": "Sara Williams",
+      "email": "hr@enterprise360.com",
+      "password": "hr123",
+      "role": "HR Manager",
+      "avatar": "",
+      "department": "Human Resources",
+      "phone": "+1-555-0102",
+      "joinDate": "2020-03-10"
+    },
+    {
+      "id": 3,
+      "name": "Mike Chen",
+      "email": "pm@enterprise360.com",
+      "password": "pm123",
+      "role": "Project Manager",
+      "avatar": "",
+      "department": "Engineering",
+      "phone": "+1-555-0103",
+      "joinDate": "2020-06-01"
+    },
+    {
+      "id": 4,
+      "name": "Emily Davis",
+      "email": "emp@enterprise360.com",
+      "password": "emp123",
+      "role": "Employee",
+      "avatar": "",
+      "department": "Engineering",
+      "phone": "+1-555-0104",
+      "joinDate": "2021-02-20"
+    },
+    {
+      "id": 5,
+      "name": "Robert Kim",
+      "email": "finance@enterprise360.com",
+      "password": "fin123",
+      "role": "Finance Manager",
+      "avatar": "",
+      "department": "Finance",
+      "phone": "+1-555-0105",
+      "joinDate": "2020-09-15"
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alex Johnson",
+      "email": "alex@enterprise360.com",
+      "phone": "+1-555-0101",
+      "department": "Administration",
+      "designation": "CEO",
+      "salary": 120000,
+      "joinDate": "2020-01-15",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 2,
+      "name": "Sara Williams",
+      "email": "sara@enterprise360.com",
+      "phone": "+1-555-0102",
+      "department": "Human Resources",
+      "designation": "HR Manager",
+      "salary": 75000,
+      "joinDate": "2020-03-10",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 3,
+      "name": "Mike Chen",
+      "email": "mike@enterprise360.com",
+      "phone": "+1-555-0103",
+      "department": "Engineering",
+      "designation": "Project Manager",
+      "salary": 90000,
+      "joinDate": "2020-06-01",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 4,
+      "name": "Emily Davis",
+      "email": "emily@enterprise360.com",
+      "phone": "+1-555-0104",
+      "department": "Engineering",
+      "designation": "Senior Developer",
+      "salary": 85000,
+      "joinDate": "2021-02-20",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 5,
+      "name": "Robert Kim",
+      "email": "robert@enterprise360.com",
+      "phone": "+1-555-0105",
+      "department": "Finance",
+      "designation": "Finance Manager",
+      "salary": 80000,
+      "joinDate": "2020-09-15",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 6,
+      "name": "Lisa Park",
+      "email": "lisa@enterprise360.com",
+      "phone": "+1-555-0106",
+      "department": "Marketing",
+      "designation": "Marketing Lead",
+      "salary": 70000,
+      "joinDate": "2021-05-10",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 7,
+      "name": "Tom Wilson",
+      "email": "tom@enterprise360.com",
+      "phone": "+1-555-0107",
+      "department": "Engineering",
+      "designation": "Frontend Developer",
+      "salary": 72000,
+      "joinDate": "2022-01-10",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 8,
+      "name": "Amy Brown",
+      "email": "amy@enterprise360.com",
+      "phone": "+1-555-0108",
+      "department": "Sales",
+      "designation": "Sales Executive",
+      "salary": 60000,
+      "joinDate": "2022-04-01",
+      "status": "Inactive",
+      "avatar": ""
+    },
+    {
+      "id": 9,
+      "name": "David Lee",
+      "email": "david@enterprise360.com",
+      "phone": "+1-555-0109",
+      "department": "Engineering",
+      "designation": "Backend Developer",
+      "salary": 78000,
+      "joinDate": "2021-11-15",
+      "status": "Active",
+      "avatar": ""
+    },
+    {
+      "id": 10,
+      "name": "Nancy Clark",
+      "email": "nancy@enterprise360.com",
+      "phone": "+1-555-0110",
+      "department": "Support",
+      "designation": "Support Engineer",
+      "salary": 55000,
+      "joinDate": "2022-07-20",
+      "status": "Active",
+      "avatar": ""
+    }
+  ],
+  "departments": [
+    "Administration",
+    "Human Resources",
+    "Engineering",
+    "Finance",
+    "Marketing",
+    "Sales",
+    "Support",
+    "Operations",
+    "Legal",
+    "Design"
+  ],
+  "designations": [
+    "CEO",
+    "CTO",
+    "CFO",
+    "HR Manager",
+    "Project Manager",
+    "Senior Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Finance Manager",
+    "Marketing Lead",
+    "Sales Executive",
+    "Support Engineer",
+    "Designer",
+    "Analyst",
+    "Intern"
+  ],
+  "attendance": [
+    {
+      "id": 1,
+      "employeeId": 1,
+      "employeeName": "Alex Johnson",
+      "date": "2026-11-23",
+      "checkIn": "09:00",
+      "checkOut": "18:00",
+      "status": "Present"
+    },
+    {
+      "id": 2,
+      "employeeId": 2,
+      "employeeName": "Sara Williams",
+      "date": "2026-11-23",
+      "checkIn": "09:15",
+      "checkOut": "18:30",
+      "status": "Present"
+    },
+    {
+      "id": 3,
+      "employeeId": 3,
+      "employeeName": "Mike Chen",
+      "date": "2026-11-23",
+      "checkIn": "",
+      "checkOut": "",
+      "status": "Absent"
+    },
+    {
+      "id": 4,
+      "employeeId": 4,
+      "employeeName": "Emily Davis",
+      "date": "2026-11-23",
+      "checkIn": "09:05",
+      "checkOut": "17:55",
+      "status": "Present"
+    },
+    {
+      "id": 5,
+      "employeeId": 5,
+      "employeeName": "Robert Kim",
+      "date": "2026-11-23",
+      "checkIn": "09:30",
+      "checkOut": "18:15",
+      "status": "Late"
+    }
+  ],
+  "leaves": [
+    {
+      "id": 1,
+      "employeeId": 2,
+      "employeeName": "Sara Williams",
+      "type": "Sick Leave",
+      "from": "2026-11-25",
+      "to": "2026-11-26",
+      "days": 2,
+      "reason": "Medical appointment",
+      "status": "Pending"
+    },
+    {
+      "id": 2,
+      "employeeId": 4,
+      "employeeName": "Emily Davis",
+      "type": "Annual Leave",
+      "from": "2026-12-24",
+      "to": "2026-12-31",
+      "days": 6,
+      "reason": "Year-end vacation",
+      "status": "Approved"
+    },
+    {
+      "id": 3,
+      "employeeId": 7,
+      "employeeName": "Tom Wilson",
+      "type": "Casual Leave",
+      "from": "2026-11-28",
+      "to": "2026-11-28",
+      "days": 1,
+      "reason": "Personal work",
+      "status": "Rejected"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Enterprise360 Platform",
+      "client": "Internal",
+      "manager": "Mike Chen",
+      "team": [
+        3,
+        4,
+        7,
+        9
+      ],
+      "status": "In Progress",
+      "priority": "High",
+      "startDate": "2026-09-01",
+      "dueDate": "2026-12-31",
+      "progress": 65,
+      "description": "Main product development project."
+    },
+    {
+      "id": 2,
+      "name": "CRM Integration",
+      "client": "TechCorp Ltd.",
+      "manager": "Mike Chen",
+      "team": [
+        3,
+        4,
+        9
+      ],
+      "status": "In Progress",
+      "priority": "Medium",
+      "startDate": "2026-10-01",
+      "dueDate": "2026-12-15",
+      "progress": 40,
+      "description": "CRM system integration for TechCorp."
+    },
+    {
+      "id": 3,
+      "name": "Marketing Website Redesign",
+      "client": "GreenLeaf Inc.",
+      "manager": "Lisa Park",
+      "team": [
+        6,
+        7
+      ],
+      "status": "Completed",
+      "priority": "Low",
+      "startDate": "2026-08-01",
+      "dueDate": "2026-10-31",
+      "progress": 100,
+      "description": "Complete redesign of marketing website."
+    },
+    {
+      "id": 4,
+      "name": "Mobile App MVP",
+      "client": "StartupX",
+      "manager": "Mike Chen",
+      "team": [
+        4,
+        7
+      ],
+      "status": "Planning",
+      "priority": "High",
+      "startDate": "2026-12-01",
+      "dueDate": "2027-03-31",
+      "progress": 10,
+      "description": "Mobile application MVP build."
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "title": "Design Dashboard UI",
+      "assignee": "Emily Davis",
+      "priority": "High",
+      "dueDate": "2026-11-30",
+      "status": "Done",
+      "description": "Create Figma mockups for dashboard."
+    },
+    {
+      "id": 2,
+      "projectId": 1,
+      "title": "Implement Auth Module",
+      "assignee": "David Lee",
+      "priority": "High",
+      "dueDate": "2026-12-05",
+      "status": "In Progress",
+      "description": "Login, register, role-based access."
+    },
+    {
+      "id": 3,
+      "projectId": 1,
+      "title": "HRMS Frontend",
+      "assignee": "Tom Wilson",
+      "priority": "Medium",
+      "dueDate": "2026-12-15",
+      "status": "In Progress",
+      "description": "Employee management UI."
+    },
+    {
+      "id": 4,
+      "projectId": 1,
+      "title": "Chart.js Integration",
+      "assignee": "Emily Davis",
+      "priority": "Medium",
+      "dueDate": "2026-12-10",
+      "status": "Todo",
+      "description": "Add interactive charts to reports."
+    },
+    {
+      "id": 5,
+      "projectId": 2,
+      "title": "API Design",
+      "assignee": "David Lee",
+      "priority": "High",
+      "dueDate": "2026-11-28",
+      "status": "Done",
+      "description": "Design REST API endpoints."
+    },
+    {
+      "id": 6,
+      "projectId": 2,
+      "title": "Frontend Integration",
+      "assignee": "Tom Wilson",
+      "priority": "Medium",
+      "dueDate": "2026-12-10",
+      "status": "Todo",
+      "description": "Connect frontend to CRM API."
+    },
+    {
+      "id": 7,
+      "projectId": 4,
+      "title": "Requirements Gathering",
+      "assignee": "Mike Chen",
+      "priority": "High",
+      "dueDate": "2026-12-07",
+      "status": "In Progress",
+      "description": "Define app requirements with client."
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "TechCorp Ltd.",
+      "contact": "John Smith",
+      "email": "john@techcorp.com",
+      "phone": "+1-555-1001",
+      "type": "Client",
+      "status": "Active",
+      "leadStatus": "Won",
+      "value": 50000,
+      "notes": "Long-term enterprise client."
+    },
+    {
+      "id": 2,
+      "name": "GreenLeaf Inc.",
+      "contact": "Maria Garcia",
+      "email": "maria@greenleaf.com",
+      "phone": "+1-555-1002",
+      "type": "Client",
+      "status": "Active",
+      "leadStatus": "Won",
+      "value": 25000,
+      "notes": "Website redesign project completed."
+    },
+    {
+      "id": 3,
+      "name": "StartupX",
+      "contact": "Kevin Park",
+      "email": "kevin@startupx.io",
+      "phone": "+1-555-1003",
+      "type": "Lead",
+      "status": "Active",
+      "leadStatus": "Negotiation",
+      "value": 80000,
+      "notes": "Mobile app MVP discussion ongoing."
+    },
+    {
+      "id": 4,
+      "name": "Global Finance Co.",
+      "contact": "Emma Wilson",
+      "email": "emma@gfc.com",
+      "phone": "+1-555-1004",
+      "type": "Lead",
+      "status": "Active",
+      "leadStatus": "Prospect",
+      "value": 120000,
+      "notes": "Initial contact made via conference."
+    },
+    {
+      "id": 5,
+      "name": "RetailPro",
+      "contact": "Sam Patel",
+      "email": "sam@retailpro.com",
+      "phone": "+1-555-1005",
+      "type": "Lead",
+      "status": "Inactive",
+      "leadStatus": "Lost",
+      "value": 15000,
+      "notes": "Went with competitor."
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "type": "Income",
+      "category": "Project Revenue",
+      "description": "TechCorp Q4 invoice",
+      "amount": 25000,
+      "date": "2026-11-01",
+      "status": "Paid"
+    },
+    {
+      "id": 2,
+      "type": "Income",
+      "category": "Consulting",
+      "description": "GreenLeaf consulting fee",
+      "amount": 8000,
+      "date": "2026-11-05",
+      "status": "Paid"
+    },
+    {
+      "id": 3,
+      "type": "Expense",
+      "category": "Salaries",
+      "description": "November payroll",
+      "amount": 45000,
+      "date": "2026-11-28",
+      "status": "Pending"
+    },
+    {
+      "id": 4,
+      "type": "Expense",
+      "category": "Infrastructure",
+      "description": "Cloud hosting fees",
+      "amount": 2500,
+      "date": "2026-11-15",
+      "status": "Paid"
+    },
+    {
+      "id": 5,
+      "type": "Income",
+      "category": "Project Revenue",
+      "description": "StartupX advance payment",
+      "amount": 20000,
+      "date": "2026-11-20",
+      "status": "Paid"
+    },
+    {
+      "id": 6,
+      "type": "Expense",
+      "category": "Marketing",
+      "description": "Ad campaign budget",
+      "amount": 5000,
+      "date": "2026-11-22",
+      "status": "Paid"
+    },
+    {
+      "id": 7,
+      "type": "Income",
+      "category": "Maintenance",
+      "description": "Annual support contract",
+      "amount": 12000,
+      "date": "2026-11-10",
+      "status": "Paid"
+    },
+    {
+      "id": 8,
+      "type": "Expense",
+      "category": "Office",
+      "description": "Office supplies",
+      "amount": 800,
+      "date": "2026-11-18",
+      "status": "Paid"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-001",
+      "client": "TechCorp Ltd.",
+      "amount": 25000,
+      "tax": 2500,
+      "discount": 500,
+      "total": 27000,
+      "date": "2026-11-01",
+      "dueDate": "2026-11-30",
+      "status": "Paid"
+    },
+    {
+      "id": "INV-002",
+      "client": "GreenLeaf Inc.",
+      "amount": 8000,
+      "tax": 800,
+      "discount": 0,
+      "total": 8800,
+      "date": "2026-11-05",
+      "dueDate": "2026-12-05",
+      "status": "Paid"
+    },
+    {
+      "id": "INV-003",
+      "client": "StartupX",
+      "amount": 20000,
+      "tax": 2000,
+      "discount": 1000,
+      "total": 21000,
+      "date": "2026-11-20",
+      "dueDate": "2026-12-20",
+      "status": "Pending"
+    },
+    {
+      "id": "INV-004",
+      "client": "Global Finance Co.",
+      "amount": 15000,
+      "tax": 1500,
+      "discount": 0,
+      "total": 16500,
+      "date": "2026-11-22",
+      "dueDate": "2026-12-22",
+      "status": "Overdue"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Laptop Pro 15",
+      "category": "Electronics",
+      "sku": "LAP-001",
+      "quantity": 25,
+      "minStock": 5,
+      "price": 1200,
+      "supplier": "TechDistrib",
+      "status": "In Stock"
+    },
+    {
+      "id": 2,
+      "name": "Office Chair Ergo",
+      "category": "Furniture",
+      "sku": "FRN-001",
+      "quantity": 40,
+      "minStock": 10,
+      "price": 350,
+      "supplier": "OfficePlus",
+      "status": "In Stock"
+    },
+    {
+      "id": 3,
+      "name": "Wireless Keyboard",
+      "category": "Electronics",
+      "sku": "KEY-001",
+      "quantity": 3,
+      "minStock": 10,
+      "price": 80,
+      "supplier": "TechDistrib",
+      "status": "Low Stock"
+    },
+    {
+      "id": 4,
+      "name": "Monitor 27inch",
+      "category": "Electronics",
+      "sku": "MON-001",
+      "quantity": 15,
+      "minStock": 5,
+      "price": 450,
+      "supplier": "TechDistrib",
+      "status": "In Stock"
+    },
+    {
+      "id": 5,
+      "name": "Desk Standing",
+      "category": "Furniture",
+      "sku": "FRN-002",
+      "quantity": 2,
+      "minStock": 5,
+      "price": 800,
+      "supplier": "OfficePlus",
+      "status": "Low Stock"
+    },
+    {
+      "id": 6,
+      "name": "Webcam HD",
+      "category": "Electronics",
+      "sku": "CAM-001",
+      "quantity": 0,
+      "minStock": 5,
+      "price": 120,
+      "supplier": "TechDistrib",
+      "status": "Out of Stock"
+    },
+    {
+      "id": 7,
+      "name": "Headset Noise Cancel",
+      "category": "Electronics",
+      "sku": "AUD-001",
+      "quantity": 18,
+      "minStock": 5,
+      "price": 200,
+      "supplier": "AudioPro",
+      "status": "In Stock"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "type": "info",
+      "title": "New Project Assigned",
+      "message": "You have been assigned to Enterprise360 Platform project.",
+      "time": "2026-11-23T10:00:00",
+      "read": false
+    },
+    {
+      "id": 2,
+      "type": "warning",
+      "title": "Low Stock Alert",
+      "message": "Wireless Keyboard stock is below minimum level.",
+      "time": "2026-11-23T09:30:00",
+      "read": false
+    },
+    {
+      "id": 3,
+      "type": "success",
+      "title": "Invoice Paid",
+      "message": "INV-001 from TechCorp Ltd. has been marked as paid.",
+      "time": "2026-11-22T16:00:00",
+      "read": true
+    },
+    {
+      "id": 4,
+      "type": "danger",
+      "title": "Invoice Overdue",
+      "message": "INV-004 from Global Finance Co. is overdue.",
+      "time": "2026-11-23T08:00:00",
+      "read": false
+    },
+    {
+      "id": 5,
+      "type": "info",
+      "title": "Leave Request",
+      "message": "Sara Williams submitted a leave request for approval.",
+      "time": "2026-11-22T14:30:00",
+      "read": false
+    },
+    {
+      "id": 6,
+      "type": "success",
+      "title": "Task Completed",
+      "message": "Design Dashboard UI task has been marked done.",
+      "time": "2026-11-21T17:00:00",
+      "read": true
+    }
+  ],
+  "announcements": [
+    {
+      "id": 1,
+      "title": "Year-End Review Meetings",
+      "message": "Annual performance reviews scheduled for Dec 15\u201320. Please prepare your self-assessment forms.",
+      "date": "2026-11-23",
+      "author": "Sara Williams",
+      "priority": "High"
+    },
+    {
+      "id": 2,
+      "title": "Office Closed \u2013 Dec 25 & Jan 1",
+      "message": "The office will be closed on Christmas Day and New Year's Day. Emergency contacts available.",
+      "date": "2026-11-20",
+      "author": "Alex Johnson",
+      "priority": "Medium"
+    },
+    {
+      "id": 3,
+      "title": "New Health Insurance Policy",
+      "message": "Updated health insurance policies take effect from December 1. Please review the new benefits package.",
+      "date": "2026-11-18",
+      "author": "Sara Williams",
+      "priority": "Medium"
+    }
+  ]
+};
