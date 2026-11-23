@@ -74,11 +74,13 @@
   const theme = localStorage.getItem('e360_theme') || 'light';
   document.documentElement.setAttribute('data-theme', theme);
 
-  // Quick login buttons
+  // Quick login buttons – fill fields AND submit
   document.querySelectorAll('.quick-login').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       document.getElementById('email').value = btn.dataset.email;
       document.getElementById('password').value = btn.dataset.pass;
+      // Auto-submit
+      document.getElementById('loginForm').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
   });
 
