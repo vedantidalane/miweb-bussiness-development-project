@@ -2,10 +2,12 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings – Enterprise360</title>
+  <title>Settings & Customization – Enterprise360</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
 <div id="toast-container"></div>
@@ -16,21 +18,24 @@
     <header class="topbar" id="topbar"></header>
     <main class="page-content">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <div><h5 class="mb-1 fw-bold">Settings & Customization</h5><p class="text-muted mb-0" style="font-size:.85rem">Manage your preferences and profile</p></div>
+        <div>
+          <h5 class="mb-1 fw-bold">Platform Settings & Customization</h5>
+          <p class="text-muted mb-0" style="font-size:.85rem">Configure your identity, theme preferences, company metadata, and storage</p>
+        </div>
       </div>
 
       <div class="row g-3">
         <!-- Settings Nav -->
         <div class="col-lg-3">
-          <div class="card">
+          <div class="card shadow-sm">
             <div class="card-body p-2">
               <nav class="settings-nav nav flex-column">
                 <button class="nav-link active text-start" data-panel="profile"><i class="bi bi-person me-2"></i>My Profile</button>
-                <button class="nav-link text-start" data-panel="appearance"><i class="bi bi-palette me-2"></i>Appearance</button>
-                <button class="nav-link text-start" data-panel="company"><i class="bi bi-building me-2"></i>Company Info</button>
+                <button class="nav-link text-start" data-panel="appearance"><i class="bi bi-palette me-2"></i>Appearance & Theme</button>
+                <button class="nav-link text-start" data-panel="company"><i class="bi bi-building me-2"></i>Company Profile</button>
                 <button class="nav-link text-start" data-panel="notifications"><i class="bi bi-bell me-2"></i>Notifications</button>
-                <button class="nav-link text-start" data-panel="password"><i class="bi bi-lock me-2"></i>Change Password</button>
-                <button class="nav-link text-start" data-panel="language"><i class="bi bi-translate me-2"></i>Language</button>
+                <button class="nav-link text-start" data-panel="password"><i class="bi bi-lock me-2"></i>Security & Password</button>
+                <button class="nav-link text-start" data-panel="language"><i class="bi bi-translate me-2"></i>Language & Region</button>
                 <button class="nav-link text-start" data-panel="data"><i class="bi bi-database me-2"></i>Data & Storage</button>
               </nav>
             </div>
@@ -41,8 +46,8 @@
         <div class="col-lg-9">
 
           <!-- Profile Panel -->
-          <div id="panel-profile" class="card">
-            <div class="card-header"><span class="card-title">My Profile</span></div>
+          <div id="panel-profile" class="card shadow-sm">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Personal Profile & Credentials</span></div>
             <div class="card-body">
               <div class="d-flex align-items-center gap-4 mb-4">
                 <div class="avatar-upload-wrap" onclick="document.getElementById('profileAvatarInput').click()">
@@ -51,158 +56,203 @@
                 </div>
                 <input type="file" id="profileAvatarInput" accept="image/*" class="d-none">
                 <div>
-                  <div class="fw-bold" id="profileName" style="font-size:1.1rem"></div>
-                  <div class="text-muted" id="profileRole"></div>
-                  <div class="text-muted" id="profileEmail" style="font-size:.85rem"></div>
+                  <div class="fw-bold" id="profileName" style="font-size:1.15rem">Alex Johnson</div>
+                  <div class="text-muted" id="profileRole">Super Admin</div>
+                  <div class="text-muted" id="profileEmail" style="font-size:.85rem">admin@enterprise360.com</div>
+                  <button class="btn btn-sm btn-outline-secondary mt-2" onclick="document.getElementById('profileAvatarInput').click()">
+                    <i class="bi bi-upload me-1"></i>Upload Photo
+                  </button>
                 </div>
               </div>
               <div class="row g-3">
                 <div class="col-sm-6"><label class="form-label">Full Name</label><input type="text" class="form-control" id="settingName"></div>
-                <div class="col-sm-6"><label class="form-label">Email</label><input type="email" class="form-control" id="settingEmail"></div>
-                <div class="col-sm-6"><label class="form-label">Phone</label><input type="text" class="form-control" id="settingPhone"></div>
-                <div class="col-sm-6"><label class="form-label">Department</label><input type="text" class="form-control" id="settingDept" readonly></div>
-                <div class="col-sm-6"><label class="form-label">Role</label><input type="text" class="form-control" id="settingRoleInp" readonly></div>
-                <div class="col-sm-6"><label class="form-label">Join Date</label><input type="text" class="form-control" id="settingJoin" readonly></div>
+                <div class="col-sm-6"><label class="form-label">Email Address</label><input type="email" class="form-control" id="settingEmail"></div>
+                <div class="col-sm-6"><label class="form-label">Phone Number</label><input type="text" class="form-control" id="settingPhone"></div>
+                <div class="col-sm-6"><label class="form-label">Assigned Department</label><input type="text" class="form-control" id="settingDept" readonly></div>
+                <div class="col-sm-6"><label class="form-label">Assigned Role</label><input type="text" class="form-control" id="settingRoleInp" readonly></div>
+                <div class="col-sm-6"><label class="form-label">Account Joined On</label><input type="text" class="form-control" id="settingJoin" readonly></div>
               </div>
               <button class="btn btn-primary mt-4" id="saveProfileBtn"><i class="bi bi-check-lg me-2"></i>Save Changes</button>
             </div>
           </div>
 
           <!-- Appearance Panel -->
-          <div id="panel-appearance" class="card d-none">
-            <div class="card-header"><span class="card-title">Appearance</span></div>
+          <div id="panel-appearance" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Theme & UI Styling</span></div>
             <div class="card-body">
               <div class="mb-4">
-                <label class="form-label fw-semibold">Theme Mode</label>
-                <div class="d-flex gap-3 mt-2">
+                <label class="form-label fw-bold">Color Theme Mode</label>
+                <div class="d-flex gap-4 mt-2">
                   <label class="d-flex align-items-center gap-2 cursor-pointer">
                     <input type="radio" name="theme" value="light" class="form-check-input" id="themeLight">
-                    <div class="border rounded p-2" style="width:80px;height:50px;background:#f8fafc"></div>
-                    <span style="font-size:.85rem">Light</span>
+                    <div class="border rounded p-2 text-center" style="width:90px;height:60px;background:#f8fafc">
+                      <i class="bi bi-sun text-warning fs-4"></i>
+                    </div>
+                    <span class="fw-semibold">Light</span>
                   </label>
                   <label class="d-flex align-items-center gap-2 cursor-pointer">
                     <input type="radio" name="theme" value="dark" class="form-check-input" id="themeDark">
-                    <div class="border rounded p-2" style="width:80px;height:50px;background:#0f172a"></div>
-                    <span style="font-size:.85rem">Dark</span>
+                    <div class="border rounded p-2 text-center" style="width:90px;height:60px;background:#0f172a">
+                      <i class="bi bi-moon-stars text-info fs-4"></i>
+                    </div>
+                    <span class="fw-semibold">Dark</span>
                   </label>
                 </div>
               </div>
               <div class="mb-4">
-                <label class="form-label fw-semibold">Accent Color</label>
+                <label class="form-label fw-bold">Primary Brand Accent Color</label>
+                <p class="text-muted small">Choose the dominant primary tint across buttons, active pills, and progress bars:</p>
                 <div class="d-flex gap-2 mt-2 flex-wrap" id="colorSwatches">
-                  <div class="color-swatch active" data-color="#4f46e5" style="background:#4f46e5"></div>
-                  <div class="color-swatch" data-color="#06b6d4" style="background:#06b6d4"></div>
-                  <div class="color-swatch" data-color="#10b981" style="background:#10b981"></div>
-                  <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b"></div>
-                  <div class="color-swatch" data-color="#ef4444" style="background:#ef4444"></div>
-                  <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6"></div>
-                  <div class="color-swatch" data-color="#ec4899" style="background:#ec4899"></div>
+                  <div class="color-swatch active" data-color="#4f46e5" style="background:#4f46e5" title="Indigo"></div>
+                  <div class="color-swatch" data-color="#06b6d4" style="background:#06b6d4" title="Cyan"></div>
+                  <div class="color-swatch" data-color="#10b981" style="background:#10b981" title="Emerald"></div>
+                  <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b" title="Amber"></div>
+                  <div class="color-swatch" data-color="#ef4444" style="background:#ef4444" title="Rose"></div>
+                  <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6" title="Violet"></div>
+                  <div class="color-swatch" data-color="#ec4899" style="background:#ec4899" title="Pink"></div>
                 </div>
               </div>
               <div class="mb-4">
-                <label class="form-label fw-semibold">Sidebar</label>
+                <label class="form-label fw-bold">Sidebar Configuration</label>
                 <div class="form-check form-switch mt-2">
                   <input class="form-check-input" type="checkbox" id="collapseSidebar">
-                  <label class="form-check-label" for="collapseSidebar">Start collapsed</label>
+                  <label class="form-check-label" for="collapseSidebar">Always start with collapsed sidebar (icons only)</label>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Company Panel -->
-          <div id="panel-company" class="card d-none">
-            <div class="card-header"><span class="card-title">Company Information</span></div>
+          <div id="panel-company" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Company Information & Tax Settings</span></div>
             <div class="card-body">
               <div class="row g-3">
-                <div class="col-sm-6"><label class="form-label">Company Name</label><input type="text" class="form-control" id="compName" value="Enterprise360 Ltd."></div>
-                <div class="col-sm-6"><label class="form-label">Industry</label><input type="text" class="form-control" id="compIndustry" value="Technology"></div>
-                <div class="col-sm-6"><label class="form-label">Email</label><input type="email" class="form-control" id="compEmail" value="contact@enterprise360.com"></div>
-                <div class="col-sm-6"><label class="form-label">Phone</label><input type="text" class="form-control" id="compPhone" value="+1-555-0100"></div>
-                <div class="col-12"><label class="form-label">Address</label><textarea class="form-control" id="compAddress" rows="2">123 Business Ave, Tech City, CA 90210</textarea></div>
-                <div class="col-sm-6"><label class="form-label">Tax ID</label><input type="text" class="form-control" id="compTax" value="US-123456789"></div>
-                <div class="col-sm-6"><label class="form-label">Fiscal Year Start</label>
-                  <select class="form-select" id="compFY"><option>January</option><option>April</option><option>July</option><option>October</option></select></div>
+                <div class="col-sm-6"><label class="form-label">Corporate Entity Name</label><input type="text" class="form-control" id="compName" value="Enterprise360 International Ltd."></div>
+                <div class="col-sm-6"><label class="form-label">Industry Sector</label><input type="text" class="form-control" id="compIndustry" value="Enterprise Cloud Software"></div>
+                <div class="col-sm-6"><label class="form-label">Official Support Email</label><input type="email" class="form-control" id="compEmail" value="contact@enterprise360.com"></div>
+                <div class="col-sm-6"><label class="form-label">Headquarters Phone</label><input type="text" class="form-control" id="compPhone" value="+1-555-0100"></div>
+                <div class="col-12"><label class="form-label">Registered Office Address</label><textarea class="form-control" id="compAddress" rows="2">123 Innovation Boulevard, Suite 500, Tech Park, CA 90210</textarea></div>
+                <div class="col-sm-6"><label class="form-label">Tax / GST Identification Number</label><input type="text" class="form-control" id="compTax" value="US-99382104-TAX"></div>
+                <div class="col-sm-6"><label class="form-label">Fiscal Year Commencement</label>
+                  <select class="form-select" id="compFY"><option>January 1st</option><option>April 1st</option><option>July 1st</option><option>October 1st</option></select>
+                </div>
               </div>
-              <button class="btn btn-primary mt-4" id="saveCompBtn"><i class="bi bi-check-lg me-2"></i>Save Company Info</button>
+              <button class="btn btn-primary mt-4" id="saveCompBtn"><i class="bi bi-check-lg me-2"></i>Save Company Information</button>
             </div>
           </div>
 
           <!-- Notifications Prefs -->
-          <div id="panel-notifications" class="card d-none">
-            <div class="card-header"><span class="card-title">Notification Preferences</span></div>
+          <div id="panel-notifications" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Notification Preferences</span></div>
             <div class="card-body">
-              <p class="text-muted mb-3" style="font-size:.88rem">Choose which notifications you want to receive.</p>
+              <p class="text-muted mb-3" style="font-size:.88rem">Select which events trigger in-app banner alerts and badge counters:</p>
               <div class="list-group list-group-flush">
-                ${['New task assigned','Leave request update','Invoice status change','Low stock alert','New project assigned','Announcement posted'].map((n,i)=>`
-                <div class="list-group-item d-flex justify-content-between align-items-center px-0 border-color: var(--border)">
-                  <span style="font-size:.88rem">${n}</span>
-                  <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" id="notifPref${i}" ${i<4?'checked':''}></div>
-                </div>`).join('')}
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <div>
+                    <div class="fw-semibold" style="font-size:.88rem">New Task Assigned</div>
+                    <div class="text-muted small">Notify when a new Kanban task is assigned to you</div>
+                  </div>
+                  <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked></div>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <div>
+                    <div class="fw-semibold" style="font-size:.88rem">Leave Approval & Updates</div>
+                    <div class="text-muted small">Notify when employee leave applications are approved or rejected</div>
+                  </div>
+                  <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked></div>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <div>
+                    <div class="fw-semibold" style="font-size:.88rem">Invoice & Billing Status</div>
+                    <div class="text-muted small">Notify when client invoices are paid or become overdue</div>
+                  </div>
+                  <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked></div>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <div>
+                    <div class="fw-semibold" style="font-size:.88rem">Low Inventory Warning</div>
+                    <div class="text-muted small">Notify when stock count dips below the required minimum threshold</div>
+                  </div>
+                  <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked></div>
+                </div>
               </div>
-              <button class="btn btn-primary mt-3" id="saveNotifPrefsBtn"><i class="bi bi-check-lg me-2"></i>Save Preferences</button>
+              <button class="btn btn-primary mt-4" id="saveNotifPrefsBtn"><i class="bi bi-check-lg me-2"></i>Save Preferences</button>
             </div>
           </div>
 
           <!-- Password Panel -->
-          <div id="panel-password" class="card d-none">
-            <div class="card-header"><span class="card-title">Change Password</span></div>
+          <div id="panel-password" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Change Security Password</span></div>
             <div class="card-body">
               <div class="alert alert-info d-flex gap-2 align-items-center" style="font-size:.85rem">
-                <i class="bi bi-info-circle-fill"></i>
-                This is a demo application. Password changes are stored locally and do not affect real security.
+                <i class="bi bi-info-circle-fill fs-5"></i>
+                This is an enterprise demo frontend application. Password updates modify the in-memory and local session.
               </div>
-              <div class="row g-3" style="max-width:420px">
+              <div class="row g-3" style="max-width:440px">
                 <div class="col-12"><label class="form-label">Current Password</label><input type="password" class="form-control" id="curPass" placeholder="••••••••"></div>
-                <div class="col-12"><label class="form-label">New Password</label><input type="password" class="form-control" id="newPass" placeholder="Min 6 characters"></div>
-                <div class="col-12"><label class="form-label">Confirm New Password</label><input type="password" class="form-control" id="confPass" placeholder="Re-enter new password"></div>
+                <div class="col-12"><label class="form-label">New Password</label><input type="password" class="form-control" id="newPass" placeholder="Minimum 6 characters"></div>
+                <div class="col-12"><label class="form-label">Confirm New Password</label><input type="password" class="form-control" id="confPass" placeholder="Repeat new password"></div>
               </div>
-              <button class="btn btn-primary mt-4" id="changePassBtn"><i class="bi bi-lock me-2"></i>Change Password</button>
+              <button class="btn btn-primary mt-4" id="changePassBtn"><i class="bi bi-lock me-2"></i>Update Password</button>
             </div>
           </div>
 
           <!-- Language Panel -->
-          <div id="panel-language" class="card d-none">
-            <div class="card-header"><span class="card-title">Language & Region</span></div>
+          <div id="panel-language" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Language, Locale & Timezone</span></div>
             <div class="card-body">
-              <div class="mb-3"><label class="form-label">Display Language</label>
-                <select class="form-select" style="max-width:280px" id="langSelect">
-                  <option value="en">English (US)</option><option value="es">Español</option><option value="fr">Français</option>
-                  <option value="de">Deutsch</option><option value="zh">中文</option><option value="ja">日本語</option>
+              <div class="mb-3">
+                <label class="form-label">Display Language</label>
+                <select class="form-select" style="max-width:320px" id="langSelect">
+                  <option value="en">English (United States)</option>
+                  <option value="es">Español (Spanish)</option>
+                  <option value="fr">Français (French)</option>
+                  <option value="de">Deutsch (German)</option>
+                  <option value="zh">中文 (Chinese)</option>
+                  <option value="ja">日本語 (Japanese)</option>
                 </select>
               </div>
-              <div class="mb-3"><label class="form-label">Time Zone</label>
-                <select class="form-select" style="max-width:280px" id="tzSelect">
-                  <option>UTC-08:00 Pacific Time</option><option>UTC-05:00 Eastern Time</option>
-                  <option>UTC+00:00 GMT</option><option>UTC+05:30 India Standard Time</option><option>UTC+08:00 China Standard Time</option>
+              <div class="mb-3">
+                <label class="form-label">Corporate Timezone</label>
+                <select class="form-select" style="max-width:320px" id="tzSelect">
+                  <option>UTC-08:00 Pacific Standard Time (US & Canada)</option>
+                  <option>UTC-05:00 Eastern Standard Time (US & Canada)</option>
+                  <option>UTC+00:00 Greenwich Mean Time (London, Dublin)</option>
+                  <option>UTC+05:30 India Standard Time (New Delhi, Mumbai)</option>
+                  <option>UTC+08:00 Singapore / Beijing Time</option>
                 </select>
               </div>
-              <div class="mb-3"><label class="form-label">Date Format</label>
-                <select class="form-select" style="max-width:280px" id="dateFmtSelect">
-                  <option>MM/DD/YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option>
+              <div class="mb-3">
+                <label class="form-label">Date Format Pattern</label>
+                <select class="form-select" style="max-width:320px" id="dateFmtSelect">
+                  <option>MMM DD, YYYY (e.g. Nov 23, 2026)</option>
+                  <option>YYYY-MM-DD (e.g. 2026-11-23)</option>
+                  <option>DD/MM/YYYY (e.g. 23/11/2026)</option>
                 </select>
               </div>
-              <div class="alert alert-warning" style="font-size:.82rem"><i class="bi bi-exclamation-triangle me-1"></i>Language switching is UI-only in this demo.</div>
-              <button class="btn btn-primary" id="saveLangBtn"><i class="bi bi-check-lg me-2"></i>Save Preferences</button>
+              <button class="btn btn-primary mt-2" id="saveLangBtn"><i class="bi bi-check-lg me-2"></i>Save Regional Preferences</button>
             </div>
           </div>
 
           <!-- Data Panel -->
-          <div id="panel-data" class="card d-none">
-            <div class="card-header"><span class="card-title">Data & Storage</span></div>
+          <div id="panel-data" class="card shadow-sm d-none">
+            <div class="card-header bg-transparent"><span class="card-title fw-bold">Data Management & Browser Storage</span></div>
             <div class="card-body">
               <div class="mb-4">
-                <h6 class="fw-semibold mb-2">Local Storage Usage</h6>
+                <h6 class="fw-bold mb-2">Local Storage Footprint</h6>
                 <div id="storageUsage" class="text-muted" style="font-size:.88rem"></div>
               </div>
+              <hr>
               <div class="mb-4">
-                <h6 class="fw-semibold mb-2">Export All Data</h6>
-                <p class="text-muted" style="font-size:.85rem">Download all application data as JSON.</p>
-                <button class="btn btn-outline-primary" id="exportDataBtn"><i class="bi bi-download me-2"></i>Export JSON</button>
+                <h6 class="fw-bold mb-2">Export Full Application Snapshot</h6>
+                <p class="text-muted" style="font-size:.85rem">Download all active database records (employees, projects, tasks, customers, finance, inventory) as a structured JSON file.</p>
+                <button class="btn btn-outline-primary" id="exportDataBtn"><i class="bi bi-download me-2"></i>Export JSON Snapshot</button>
               </div>
-              <div class="mb-4">
-                <h6 class="fw-semibold mb-2 text-danger">Reset Application Data</h6>
-                <p class="text-muted" style="font-size:.85rem">Clear all local storage and reload sample data.</p>
-                <button class="btn btn-outline-danger" id="resetDataBtn"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Data</button>
+              <hr>
+              <div class="mb-2">
+                <h6 class="fw-bold mb-2 text-danger">Reset to Factory Demo State</h6>
+                <p class="text-muted" style="font-size:.85rem">Clear all modified local changes and reinitialize from the original Enterprise360 seed dataset.</p>
+                <button class="btn btn-outline-danger" id="resetDataBtn"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset All Data</button>
               </div>
             </div>
           </div>
@@ -219,178 +269,6 @@
 <script src="../js/utils.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/app.js"></script>
-<script>
-(function() {
-  const { Storage, Session } = window.E360;
-  const { showToast, genId, formatDate, formatDateTime, timeAgo, today, formatCurrency, getInitials, avatarColor, avatarHtml, statusBadge, priorityBadge, debounce, throttle, confirm, paginate, renderPagination, searchFilter, sortBy, exportCSV, previewImage, fetchData, skeletonRow, showLoading } = window.E360.Utils;
-  const { Auth, getSampleData } = window.E360;
-  const { initPage, renderSidebar, renderTopbar } = window.E360.App;
-
-
-  async function init() {
-    const user = await initPage('Settings', 'settings.html');
-    if (!user) return;
-
-    loadProfile(user);
-    loadAppearance();
-    loadStorageUsage();
-
-    // Nav
-    document.querySelectorAll('[data-panel]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-panel]').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('[id^="panel-"]').forEach(p=>p.classList.add('d-none'));
-        document.getElementById('panel-'+btn.dataset.panel).classList.remove('d-none');
-        if(btn.dataset.panel==='data') loadStorageUsage();
-      });
-    });
-
-    document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
-    document.getElementById('saveCompBtn').addEventListener('click', () => showToast('Company info saved!', 'success'));
-    document.getElementById('saveNotifPrefsBtn').addEventListener('click', () => showToast('Notification preferences saved!', 'success'));
-    document.getElementById('saveLangBtn').addEventListener('click', () => showToast('Language preferences saved!', 'success'));
-    document.getElementById('changePassBtn').addEventListener('click', changePassword);
-    document.getElementById('exportDataBtn').addEventListener('click', exportData);
-    document.getElementById('resetDataBtn').addEventListener('click', resetData);
-
-    // Appearance
-    document.querySelectorAll('input[name="theme"]').forEach(inp => {
-      inp.addEventListener('change', () => {
-        document.documentElement.setAttribute('data-theme', inp.value);
-        localStorage.setItem('e360_theme', inp.value);
-        showToast(`${inp.value.charAt(0).toUpperCase()+inp.value.slice(1)} theme applied!`, 'info');
-      });
-    });
-
-    document.querySelectorAll('.color-swatch').forEach(sw => {
-      sw.addEventListener('click', () => {
-        document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
-        sw.classList.add('active');
-        document.documentElement.style.setProperty('--primary', sw.dataset.color);
-        document.documentElement.style.setProperty('--primary-dark', sw.dataset.color);
-        Storage.set('accentColor', sw.dataset.color);
-        showToast('Accent color changed!', 'success');
-      });
-    });
-
-    document.getElementById('profileAvatarInput').addEventListener('change', e => {
-      const file = e.target.files[0]; if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const user = Auth.getCurrentUser();
-        const avEl = document.getElementById('profileAvatar');
-        avEl.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
-        user.avatar = ev.target.result;
-        sessionStorage.setItem('e360_currentUser', JSON.stringify(user));
-        showToast('Profile photo updated!', 'success');
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function loadProfile(user) {
-    const color = avatarColor(user.name);
-    const avEl = document.getElementById('profileAvatar');
-    avEl.style.background = color;
-    if (user.avatar) {
-      avEl.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
-    } else {
-      avEl.textContent = getInitials(user.name);
-    }
-    document.getElementById('profileName').textContent = user.name;
-    document.getElementById('profileRole').textContent = user.role;
-    document.getElementById('profileEmail').textContent = user.email;
-    document.getElementById('settingName').value = user.name;
-    document.getElementById('settingEmail').value = user.email;
-    document.getElementById('settingPhone').value = user.phone || '';
-    document.getElementById('settingDept').value = user.department || '';
-    document.getElementById('settingRoleInp').value = user.role;
-    document.getElementById('settingJoin').value = formatDate(user.joinDate);
-  }
-
-  function loadAppearance() {
-    const theme = localStorage.getItem('e360_theme') || 'light';
-    document.getElementById(theme === 'dark' ? 'themeDark' : 'themeLight').checked = true;
-    const accent = Storage.get('accentColor', '#4f46e5');
-    document.querySelectorAll('.color-swatch').forEach(sw => {
-      sw.classList.toggle('active', sw.dataset.color === accent);
-    });
-    if (accent !== '#4f46e5') document.documentElement.style.setProperty('--primary', accent);
-    document.getElementById('collapseSidebar').checked = Storage.get('sidebarCollapsed', false);
-    document.getElementById('collapseSidebar').addEventListener('change', e => {
-      Storage.set('sidebarCollapsed', e.target.checked);
-      showToast('Sidebar preference saved!', 'info');
-    });
-  }
-
-  function saveProfile() {
-    const user = Auth.getCurrentUser();
-    user.name = document.getElementById('settingName').value;
-    user.email = document.getElementById('settingEmail').value;
-    user.phone = document.getElementById('settingPhone').value;
-    sessionStorage.setItem('e360_currentUser', JSON.stringify(user));
-    document.getElementById('profileName').textContent = user.name;
-    document.getElementById('profileEmail').textContent = user.email;
-    showToast('Profile updated successfully!', 'success');
-  }
-
-  function changePassword() {
-    const cur = document.getElementById('curPass').value;
-    const nw  = document.getElementById('newPass').value;
-    const cnf = document.getElementById('confPass').value;
-    if (!cur) { showToast('Enter current password.', 'warning'); return; }
-    if (nw.length < 6) { showToast('New password must be at least 6 characters.', 'warning'); return; }
-    if (nw !== cnf) { showToast('Passwords do not match.', 'warning'); return; }
-    const user = Auth.getCurrentUser();
-    if (cur !== user.password) { showToast('Current password is incorrect.', 'danger'); return; }
-    user.password = nw;
-    sessionStorage.setItem('e360_currentUser', JSON.stringify(user));
-    document.getElementById('curPass').value = '';
-    document.getElementById('newPass').value = '';
-    document.getElementById('confPass').value = '';
-    showToast('Password changed successfully!', 'success');
-  }
-
-  function loadStorageUsage() {
-    let total = 0;
-    for (const key in localStorage) {
-      if (key.startsWith('e360_')) total += (localStorage[key].length * 2);
-    }
-    const kb = (total / 1024).toFixed(2);
-    document.getElementById('storageUsage').innerHTML = `
-      <div class="d-flex align-items-center gap-2 mb-2">
-        <div class="progress flex-1" style="height:8px;max-width:200px"><div class="progress-bar bg-primary" style="width:${Math.min(100,total/51200*100).toFixed(0)}%"></div></div>
-        <span>${kb} KB used</span>
-      </div>
-      <div class="text-muted" style="font-size:.78rem">Stored in browser localStorage (max ~5MB)</div>`;
-  }
-
-  function exportData() {
-    const data = {};
-    for (const key in localStorage) {
-      if (key.startsWith('e360_')) {
-        try { data[key.replace('e360_','')] = JSON.parse(localStorage[key]); } catch { data[key]=localStorage[key]; }
-      }
-    }
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='enterprise360-data.json'; a.click();
-    URL.revokeObjectURL(url);
-    showToast('Data exported successfully!', 'success');
-  }
-
-  async function resetData() {
-    const ok = await confirm('Reset all application data? This will clear all saved data and reload the sample dataset. This cannot be undone.', 'Reset Data');
-    if (!ok) return;
-    Storage.clear();
-    showToast('Data reset successfully! Reloading...', 'info');
-    setTimeout(() => window.location.reload(), 1200);
-  }
-
-  init();
-
-})();
-</script>
+<script src="../js/settings.js"></script>
 </body>
 </html>

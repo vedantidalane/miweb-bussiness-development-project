@@ -2,10 +2,12 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customers – Enterprise360</title>
+  <title>Customers & CRM – Enterprise360</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
 <div id="toast-container"></div>
@@ -16,42 +18,74 @@
     <header class="topbar" id="topbar"></header>
     <main class="page-content">
       <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
-        <div><h5 class="mb-1 fw-bold">CRM – Customer Management</h5><p class="text-muted mb-0" style="font-size:.85rem">Manage customers and leads</p></div>
+        <div>
+          <h5 class="mb-1 fw-bold">CRM – Customer Management</h5>
+          <p class="text-muted mb-0" style="font-size:.85rem">Manage enterprise customer accounts, sales opportunities, and deal pipelines</p>
+        </div>
         <button class="btn btn-primary" id="addCustBtn"><i class="bi bi-plus-lg me-2"></i>Add Customer</button>
       </div>
 
       <div class="row g-3 mb-4" id="crmStats"></div>
 
       <!-- Sales Pipeline -->
-      <div class="card mb-4">
-        <div class="card-header"><span class="card-title">Sales Pipeline</span></div>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-transparent border-bottom">
+          <span class="card-title fw-bold">Deal Flow & Pipeline Stages</span>
+        </div>
         <div class="card-body">
-          <div class="d-flex gap-2 overflow-auto pb-2" id="pipeline"></div>
+          <div class="d-flex gap-3 overflow-auto pb-2" id="pipeline"></div>
         </div>
       </div>
 
       <!-- Filters + Table -->
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title" id="custCount">Customers</span>
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="card-title fw-bold" id="custCount">Customers</span>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-secondary" id="exportCustBtn"><i class="bi bi-download me-1"></i>Export</button>
+            <button class="btn btn-sm btn-outline-secondary" id="exportCustBtn"><i class="bi bi-download me-1"></i>Export CSV</button>
           </div>
         </div>
         <div class="card-body py-3 border-bottom">
-          <div class="row g-2">
-            <div class="col-sm-5"><div class="search-bar"><i class="bi bi-search"></i><input type="text" class="form-control" id="custSearch" placeholder="Search customers…"></div></div>
-            <div class="col-sm-3"><select class="form-select" id="custTypeFilter"><option value="">All Types</option><option>Client</option><option>Lead</option></select></div>
-            <div class="col-sm-3"><select class="form-select" id="custStatusFilter"><option value="">All Status</option><option>Active</option><option>Inactive</option></select></div>
+          <div class="row g-2 align-items-center">
+            <div class="col-sm-5">
+              <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" class="form-control" id="custSearch" placeholder="Search by company, contact, or email…">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <select class="form-select" id="custTypeFilter">
+                <option value="">All Account Types</option>
+                <option>Client</option>
+                <option>Lead</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <select class="form-select" id="custStatusFilter">
+                <option value="">All Statuses</option>
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="table-wrapper">
           <table class="table table-hover mb-0">
-            <thead><tr><th>Company</th><th>Contact</th><th>Type</th><th>Lead Status</th><th>Value</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>Type</th>
+                <th>Lead Status</th>
+                <th>Deal Value</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
             <tbody id="custTable"></tbody>
           </table>
         </div>
-        <div class="card-body border-top d-flex justify-content-between align-items-center py-2">
+        <div class="card-body border-top d-flex justify-content-between align-items-center py-2 flex-wrap gap-2">
           <div class="text-muted" style="font-size:.82rem" id="custPageInfo"></div>
           <div id="custPagination"></div>
         </div>
@@ -62,26 +96,69 @@
 
 <!-- Customer Modal -->
 <div class="modal fade" id="custModal" tabindex="-1">
-  <div class="modal-dialog modal-lg"><div class="modal-content">
-    <div class="modal-header"><h6 class="modal-title" id="custModalTitle">Add Customer</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-      <div class="row g-3">
-        <div class="col-sm-6"><label class="form-label">Company Name *</label><input type="text" class="form-control" id="custName"></div>
-        <div class="col-sm-6"><label class="form-label">Contact Person</label><input type="text" class="form-control" id="custContact"></div>
-        <div class="col-sm-6"><label class="form-label">Email</label><input type="email" class="form-control" id="custEmail"></div>
-        <div class="col-sm-6"><label class="form-label">Phone</label><input type="text" class="form-control" id="custPhone"></div>
-        <div class="col-sm-4"><label class="form-label">Type</label>
-          <select class="form-select" id="custType"><option value="Client">Client</option><option value="Lead">Lead</option></select></div>
-        <div class="col-sm-4"><label class="form-label">Lead Status</label>
-          <select class="form-select" id="custLeadStatus"><option>Prospect</option><option>Negotiation</option><option>Won</option><option>Lost</option></select></div>
-        <div class="col-sm-4"><label class="form-label">Deal Value (USD)</label><input type="number" class="form-control" id="custValue" placeholder="0"></div>
-        <div class="col-sm-6"><label class="form-label">Status</label>
-          <select class="form-select" id="custActive"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
-        <div class="col-12"><label class="form-label">Notes</label><textarea class="form-control" id="custNotes" rows="3"></textarea></div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="custModalTitle">Add Customer</h6>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label">Company Name *</label>
+            <input type="text" class="form-control" id="custName" placeholder="e.g. Acme Global Inc." required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Contact Person</label>
+            <input type="text" class="form-control" id="custContact" placeholder="e.g. Sarah Jenkins">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="custEmail" placeholder="sarah@acmeglobal.com">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="custPhone" placeholder="+1-555-0199">
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label">Account Type</label>
+            <select class="form-select" id="custType">
+              <option value="Client">Client</option>
+              <option value="Lead">Lead</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label">Pipeline Stage</label>
+            <select class="form-select" id="custLeadStatus">
+              <option>Prospect</option>
+              <option>Negotiation</option>
+              <option>Won</option>
+              <option>Lost</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <label class="form-label">Estimated Deal Value (USD)</label>
+            <input type="number" class="form-control" id="custValue" placeholder="50000">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="custActive">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Customer Notes & Follow-up History</label>
+            <textarea class="form-control" id="custNotes" rows="3" placeholder="Enter meeting outcomes or contract notes…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="saveCustBtn"><i class="bi bi-check-lg me-1"></i>Save Customer</button>
       </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" id="saveCustBtn">Save</button></div>
-  </div></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -90,152 +167,6 @@
 <script src="../js/utils.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/app.js"></script>
-<script>
-(function() {
-  const { Storage, Session } = window.E360;
-  const { showToast, genId, formatDate, formatDateTime, timeAgo, today, formatCurrency, getInitials, avatarColor, avatarHtml, statusBadge, priorityBadge, debounce, throttle, confirm, paginate, renderPagination, searchFilter, sortBy, exportCSV, previewImage, fetchData, skeletonRow, showLoading } = window.E360.Utils;
-  const { Auth, getSampleData } = window.E360;
-  const { initPage, renderSidebar, renderTopbar } = window.E360.App;
-
-
-  let customers=[]; let editId=null; let custModal; let curPage=1; const PER=8;
-
-  async function init() {
-    const user = await initPage('Customers', 'customers.html');
-    if (!user) return;
-    const data = await getSampleData();
-    customers = Storage.get('customers', data.customers);
-    custModal = new bootstrap.Modal(document.getElementById('custModal'));
-
-    renderStats(); renderPipeline(); renderTable();
-    document.getElementById('addCustBtn').addEventListener('click', openAdd);
-    document.getElementById('saveCustBtn').addEventListener('click', save);
-    document.getElementById('custSearch').addEventListener('input', debounce(() => { curPage=1; renderTable(); }, 300));
-    document.getElementById('custTypeFilter').addEventListener('change', () => { curPage=1; renderTable(); });
-    document.getElementById('custStatusFilter').addEventListener('change', () => { curPage=1; renderTable(); });
-    document.getElementById('exportCustBtn').addEventListener('click', () => exportCSV(getFiltered(), 'customers.csv'));
-  }
-
-  function renderStats() {
-    const total  = customers.length;
-    const clients = customers.filter(c=>c.type==='Client').length;
-    const leads  = customers.filter(c=>c.type==='Lead').length;
-    const totalVal = customers.reduce((s,c) => s+c.value,0);
-    const won    = customers.filter(c=>c.leadStatus==='Won').length;
-    document.getElementById('crmStats').innerHTML = [
-      {label:'Total',value:total,icon:'bi-people',bg:'bg-primary-soft'},
-      {label:'Clients',value:clients,icon:'bi-person-check',bg:'bg-success-soft'},
-      {label:'Leads',value:leads,icon:'bi-funnel',bg:'bg-info-soft'},
-      {label:'Pipeline Value',value:formatCurrency(totalVal),icon:'bi-currency-dollar',bg:'bg-warning-soft'},
-      {label:'Won Deals',value:won,icon:'bi-trophy',bg:'bg-success-soft'},
-    ].map(s=>`<div class="col-sm-6 col-lg"><div class="stat-card"><div class="stat-icon ${s.bg}"><i class="bi ${s.icon}"></i></div><div class="stat-info"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div></div></div>`).join('');
-  }
-
-  function renderPipeline() {
-    const stages = ['Prospect','Negotiation','Won','Lost'];
-    const colors  = {'Prospect':'#3b82f6','Negotiation':'#f59e0b','Won':'#10b981','Lost':'#ef4444'};
-    document.getElementById('pipeline').innerHTML = stages.map(s => {
-      const items = customers.filter(c=>c.leadStatus===s);
-      const val   = items.reduce((t,c)=>t+c.value,0);
-      return `<div class="card flex-shrink-0" style="min-width:160px">
-        <div class="card-body text-center py-3">
-          <div style="width:40px;height:4px;border-radius:2px;background:${colors[s]};margin:0 auto 10px"></div>
-          <div class="fw-bold" style="font-size:1.1rem">${items.length}</div>
-          <div style="font-size:.78rem;color:var(--text-muted)">${s}</div>
-          <div style="font-size:.8rem;font-weight:600;color:${colors[s]}">${formatCurrency(val)}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  function getFiltered() {
-    let list = [...customers];
-    const q  = document.getElementById('custSearch').value;
-    const tp = document.getElementById('custTypeFilter').value;
-    const st = document.getElementById('custStatusFilter').value;
-    if (q)  list = searchFilter(list, q, ['name','contact','email']);
-    if (tp) list = list.filter(c=>c.type===tp);
-    if (st) list = list.filter(c=>c.status===st);
-    return list;
-  }
-
-  function renderTable() {
-    const filtered = getFiltered();
-    const pager = paginate(filtered, curPage, PER);
-    document.getElementById('custCount').textContent = `Customers (${filtered.length})`;
-    document.getElementById('custPageInfo').textContent = `Showing ${(curPage-1)*PER+1}–${Math.min(curPage*PER,filtered.length)} of ${filtered.length}`;
-    const statusCls = { Active:'badge-active', Inactive:'badge-inactive' };
-    const leadCls   = { Won:'badge-won', Lost:'badge-lost', Prospect:'badge-prospect', Negotiation:'badge-pending' };
-    document.getElementById('custTable').innerHTML = pager.items.length ? pager.items.map(c => `
-      <tr>
-        <td><div class="fw-semibold" style="font-size:.85rem">${c.name}</div><div class="text-muted" style="font-size:.75rem">${c.email||'—'}</div></td>
-        <td><div style="font-size:.85rem">${c.contact||'—'}</div><div class="text-muted" style="font-size:.75rem">${c.phone||''}</div></td>
-        <td><span class="badge bg-secondary bg-opacity-10 text-secondary" style="font-size:.75rem">${c.type}</span></td>
-        <td><span class="badge-status ${leadCls[c.leadStatus]||'badge-pending'}">${c.leadStatus}</span></td>
-        <td style="font-size:.85rem;font-weight:600">${formatCurrency(c.value)}</td>
-        <td><span class="badge-status ${statusCls[c.status]||'badge-pending'}">${c.status}</span></td>
-        <td><div class="d-flex gap-1">
-          <button class="btn-icon edit-cust" data-id="${c.id}" title="Edit"><i class="bi bi-pencil"></i></button>
-          <button class="btn-icon text-danger del-cust" data-id="${c.id}" title="Delete"><i class="bi bi-trash"></i></button>
-        </div></td>
-      </tr>`).join('')
-      : `<tr><td colspan="7"><div class="empty-state"><i class="bi bi-people"></i><h6>No customers found</h6></div></td></tr>`;
-    document.getElementById('custPagination').innerHTML = renderPagination(pager, p=>{curPage=p;renderTable();});
-    document.querySelectorAll('.edit-cust').forEach(b => b.addEventListener('click', ()=>openEdit(+b.dataset.id)));
-    document.querySelectorAll('.del-cust').forEach(b => b.addEventListener('click', ()=>delCust(+b.dataset.id)));
-  }
-
-  function openAdd() {
-    editId=null;
-    document.getElementById('custModalTitle').textContent='Add Customer';
-    ['custName','custContact','custEmail','custPhone','custNotes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('custType').value='Lead';
-    document.getElementById('custLeadStatus').value='Prospect';
-    document.getElementById('custValue').value='';
-    document.getElementById('custActive').value='Active';
-    custModal.show();
-  }
-
-  function openEdit(id) {
-    editId=id;
-    const c=customers.find(c=>c.id===id); if(!c) return;
-    document.getElementById('custModalTitle').textContent='Edit Customer';
-    document.getElementById('custName').value=c.name;
-    document.getElementById('custContact').value=c.contact||'';
-    document.getElementById('custEmail').value=c.email||'';
-    document.getElementById('custPhone').value=c.phone||'';
-    document.getElementById('custType').value=c.type;
-    document.getElementById('custLeadStatus').value=c.leadStatus;
-    document.getElementById('custValue').value=c.value;
-    document.getElementById('custActive').value=c.status;
-    document.getElementById('custNotes').value=c.notes||'';
-    custModal.show();
-  }
-
-  async function delCust(id) {
-    const ok = await confirm('Delete this customer?');
-    if (!ok) return;
-    customers=customers.filter(c=>c.id!==id);
-    Storage.set('customers',customers);
-    renderStats(); renderPipeline(); renderTable();
-    showToast('Customer deleted.','danger');
-  }
-
-  function save() {
-    const name=document.getElementById('custName').value.trim();
-    if (!name) { showToast('Company name is required.','warning'); return; }
-    const cust = { id:editId||genId(), name, contact:document.getElementById('custContact').value, email:document.getElementById('custEmail').value, phone:document.getElementById('custPhone').value, type:document.getElementById('custType').value, leadStatus:document.getElementById('custLeadStatus').value, value:parseFloat(document.getElementById('custValue').value)||0, status:document.getElementById('custActive').value, notes:document.getElementById('custNotes').value };
-    if (editId) { const idx=customers.findIndex(c=>c.id===editId); if(idx!==-1) customers[idx]={...customers[idx],...cust}; }
-    else customers.push(cust);
-    Storage.set('customers',customers);
-    custModal.hide();
-    renderStats(); renderPipeline(); renderTable();
-    showToast(editId?'Customer updated!':'Customer added!','success');
-  }
-
-  init();
-
-})();
-</script>
+<script src="../js/customers.js"></script>
 </body>
 </html>

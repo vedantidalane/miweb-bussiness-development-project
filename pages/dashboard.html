@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
 <div id="toast-container"></div>
@@ -17,90 +19,137 @@
     <header class="topbar" id="topbar"></header>
     <main class="page-content">
 
-      <!-- Date Filter -->
+      <!-- Top Title and Filter Row -->
       <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-          <h5 class="mb-1 fw-bold">Overview</h5>
-          <p class="text-muted mb-0" style="font-size:.85rem" id="dateDisplay"></p>
+          <h4 class="mb-0 fw-bold">Dashboard</h4>
         </div>
-        <div class="d-flex gap-2 align-items-center">
-          <input type="date" class="form-control form-control-sm" id="filterDate" style="width:160px">
-          <select class="form-select form-select-sm" id="filterPeriod" style="width:130px">
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month" selected>This Month</option>
-            <option value="year">This Year</option>
-          </select>
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle btn-sm bg-white shadow-sm" type="button" data-bs-toggle="dropdown" id="dateFilterBtn">
+            <i class="bi bi-calendar3 me-2"></i>Last 30 Days
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><a class="dropdown-item active date-opt" href="#" data-range="30">Last 30 Days</a></li>
+            <li><a class="dropdown-item date-opt" href="#" data-range="7">Last 7 Days</a></li>
+            <li><a class="dropdown-item date-opt" href="#" data-range="90">Last 90 Days</a></li>
+            <li><a class="dropdown-item date-opt" href="#" data-range="365">This Year</a></li>
+          </ul>
         </div>
       </div>
 
-      <!-- Stat Cards -->
+      <!-- Stat Cards Row (5 columns matching Reference UI) -->
       <div class="row g-3 mb-4" id="statCards"></div>
 
-      <!-- Charts Row -->
+      <!-- Charts & Activities Row -->
       <div class="row g-3 mb-4">
-        <div class="col-lg-8">
-          <div class="card h-100">
-            <div class="card-header">
-              <span class="card-title">Revenue vs Expenses</span>
-              <div class="d-flex gap-2">
-                <select class="form-select form-select-sm" id="chartPeriod" style="width:120px">
-                  <option value="6">Last 6 months</option>
-                  <option value="12">Last 12 months</option>
-                </select>
+        <!-- Business Overview -->
+        <div class="col-lg-5">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pb-0">
+              <span class="card-title fw-bold">Business Overview</span>
+              <div class="d-flex align-items-center gap-3 small">
+                <span class="d-flex align-items-center gap-1"><span class="badge-dot bg-primary" style="position:static;display:inline-block"></span> Revenue</span>
+                <span class="d-flex align-items-center gap-1"><span class="badge-dot" style="position:static;display:inline-block;background:#8b5cf6"></span> Expenses</span>
               </div>
             </div>
-            <div class="card-body"><div class="chart-container" style="height:260px"><canvas id="revenueChart"></canvas></div></div>
+            <div class="card-body">
+              <div class="chart-container" style="height:250px"><canvas id="revenueChart"></canvas></div>
+            </div>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-header"><span class="card-title">Project Status</span></div>
-            <div class="card-body d-flex flex-column align-items-center justify-content-center">
-              <div class="chart-container" style="height:220px;width:220px"><canvas id="projectChart"></canvas></div>
-              <div id="projectLegend" class="d-flex flex-wrap gap-3 justify-content-center mt-3"></div>
+
+        <!-- Project Progress -->
+        <div class="col-lg-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pb-0">
+              <span class="card-title fw-bold">Project Progress</span>
+              <a href="projects.html" class="text-primary text-decoration-none small fw-semibold">View All <i class="bi bi-arrow-right"></i></a>
             </div>
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+              <div class="donut-chart-wrap">
+                <canvas id="projectChart"></canvas>
+                <div class="donut-center-text">
+                  <div class="donut-percent" id="overallProgressPercent">78%</div>
+                  <div class="donut-label">Overall Progress</div>
+                </div>
+              </div>
+              <div id="projectLegend" class="d-flex flex-column gap-2 w-100 mt-3 px-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="col-lg-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pb-0">
+              <span class="card-title fw-bold">Recent Activities</span>
+              <a href="notifications.html" class="text-primary text-decoration-none small fw-semibold">View All <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="card-body pt-3" id="activityList"></div>
           </div>
         </div>
       </div>
 
-      <!-- Bottom Row -->
+      <!-- Kanban Tasks & Company Calendar Row -->
       <div class="row g-3">
-        <!-- Recent Activity -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Recent Activity</span>
-              <a href="notifications.html" class="btn btn-sm btn-outline-primary">View All</a>
+        <!-- Kanban Board Project Tasks -->
+        <div class="col-lg-7">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pb-0">
+              <span class="card-title fw-bold">Kanban Board - Project Tasks</span>
+              <a href="tasks.html" class="text-primary text-decoration-none small fw-semibold">View All <i class="bi bi-arrow-right"></i></a>
             </div>
-            <div id="activityList" style="max-height:340px;overflow-y:auto"></div>
+            <div class="card-body">
+              <div class="row g-3" id="dashKanbanRow"></div>
+            </div>
           </div>
         </div>
-        <!-- Team & Projects -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Active Projects</span>
-              <a href="projects.html" class="btn btn-sm btn-outline-primary">View All</a>
+
+        <!-- Company Calendar -->
+        <div class="col-lg-5">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pb-0">
+              <span class="card-title fw-bold">Company Calendar</span>
+              <div class="d-flex align-items-center gap-2 small">
+                <button class="btn btn-sm btn-icon" id="prevCalMonth"><i class="bi bi-chevron-left"></i></button>
+                <span class="fw-semibold" id="calMonthLabel">November 2026</span>
+                <button class="btn btn-sm btn-icon" id="nextCalMonth"><i class="bi bi-chevron-right"></i></button>
+              </div>
             </div>
-            <div class="card-body" id="activeProjects"></div>
-          </div>
-        </div>
-        <!-- Employee Dept Chart -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header"><span class="card-title">Employees by Department</span></div>
-            <div class="card-body"><div class="chart-container" style="height:220px"><canvas id="deptChart"></canvas></div></div>
-          </div>
-        </div>
-        <!-- Pending Tasks -->
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Pending Tasks</span>
-              <a href="tasks.html" class="btn btn-sm btn-outline-primary">View All</a>
+            <div class="card-body pt-2">
+              <div class="row g-3 align-items-center">
+                <div class="col-sm-7">
+                  <div class="cal-grid-header">
+                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                  </div>
+                  <div class="cal-grid-body" id="calDaysGrid"></div>
+                </div>
+                <div class="col-sm-5 border-start">
+                  <div class="fw-semibold small text-muted mb-2">Today's Schedule</div>
+                  <div class="cal-agenda-item">
+                    <div class="cal-agenda-bar bg-primary"></div>
+                    <div>
+                      <div class="cal-agenda-time">9:00 AM</div>
+                      <div class="cal-agenda-name">Team Standup</div>
+                    </div>
+                  </div>
+                  <div class="cal-agenda-item">
+                    <div class="cal-agenda-bar" style="background:#8b5cf6"></div>
+                    <div>
+                      <div class="cal-agenda-time">1:00 PM</div>
+                      <div class="cal-agenda-name">Project Review</div>
+                    </div>
+                  </div>
+                  <div class="cal-agenda-item">
+                    <div class="cal-agenda-bar bg-success"></div>
+                    <div>
+                      <div class="cal-agenda-time">4:00 PM</div>
+                      <div class="cal-agenda-name">Client Demo Call</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="card-body p-0" id="pendingTasks" style="max-height:240px;overflow-y:auto"></div>
           </div>
         </div>
       </div>

@@ -1,0 +1,112 @@
+/* ========================================================
+   Enterprise360 – Responsive Breakpoint Overrides
+   ======================================================== */
+
+@media (max-width: 1199.98px) {
+  .donut-chart-wrap {
+    width: 170px;
+    height: 170px;
+  }
+  .donut-percent {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0 !important;
+  }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 1035;
+  }
+  .sidebar-overlay.show {
+    display: block;
+  }
+  
+  .topbar {
+    padding: 0 16px;
+  }
+  .page-content {
+    padding: 16px;
+  }
+  .stat-main-val {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .stat-card-modern {
+    padding: 16px;
+  }
+  .stat-header {
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .stat-icon-square {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  .stat-main-val {
+    font-size: 1.4rem;
+  }
+  .topbar-search-input {
+    width: 160px !important;
+  }
+  .topbar-title {
+    display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .stat-wave {
+    display: none;
+  }
+  .dash-kanban-col {
+    margin-bottom: 12px;
+  }
+  .kanban-board {
+    flex-direction: column;
+  }
+  .kanban-col {
+    min-width: 100%;
+  }
+  .page-content {
+    padding: 12px;
+  }
+  .topbar {
+    padding: 0 12px;
+    height: 58px;
+  }
+}
+
+/* Print Optimization for Reports and Invoices */
+@media print {
+  .sidebar, .topbar, #toast-container, .btn, .card-header .btn, .search-bar, .pagination {
+    display: none !important;
+  }
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .page-content {
+    padding: 0 !important;
+  }
+  .card {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

@@ -2,10 +2,12 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finance – Enterprise360</title>
+  <title>Finance & Invoices – Enterprise360</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
 <div id="toast-container"></div>
@@ -16,7 +18,10 @@
     <header class="topbar" id="topbar"></header>
     <main class="page-content">
       <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
-        <div><h5 class="mb-1 fw-bold">Finance Management</h5><p class="text-muted mb-0" style="font-size:.85rem">Track income, expenses and invoices</p></div>
+        <div>
+          <h5 class="mb-1 fw-bold">Finance Management</h5>
+          <p class="text-muted mb-0" style="font-size:.85rem">Track company revenue, operating expenses, and enterprise invoicing</p>
+        </div>
         <div class="d-flex gap-2">
           <button class="btn btn-outline-primary" id="createInvBtn"><i class="bi bi-file-earmark-text me-2"></i>New Invoice</button>
           <button class="btn btn-primary" id="addTxnBtn"><i class="bi bi-plus-lg me-2"></i>Add Transaction</button>
@@ -28,29 +33,58 @@
 
       <!-- Tabs -->
       <ul class="nav nav-tabs mb-3" id="finTabs">
-        <li class="nav-item"><button class="nav-link active" data-tab="txn">Transactions</button></li>
-        <li class="nav-item"><button class="nav-link" data-tab="invoices">Invoices</button></li>
-        <li class="nav-item"><button class="nav-link" data-tab="budget">Budget Overview</button></li>
+        <li class="nav-item"><button class="nav-link active" data-tab="txn">Transactions Feed</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="invoices">Invoices & Billing</button></li>
+        <li class="nav-item"><button class="nav-link" data-tab="budget">Budget & Category Breakdown</button></li>
       </ul>
 
       <!-- Transactions Tab -->
       <div id="txn-panel">
-        <div class="card">
+        <div class="card shadow-sm">
           <div class="card-body py-3 border-bottom">
             <div class="row g-2 align-items-center">
-              <div class="col-sm-5"><div class="search-bar"><i class="bi bi-search"></i><input type="text" class="form-control" id="txnSearch" placeholder="Search transactions…"></div></div>
-              <div class="col-sm-3"><select class="form-select" id="txnTypeFilter"><option value="">All Types</option><option value="Income">Income</option><option value="Expense">Expense</option></select></div>
-              <div class="col-sm-3"><select class="form-select" id="txnStatusFilter"><option value="">All Status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
-              <div class="col-auto ms-auto"><button class="btn btn-sm btn-outline-secondary" id="exportTxnBtn"><i class="bi bi-download me-1"></i>Export</button></div>
+              <div class="col-sm-5">
+                <div class="search-bar">
+                  <i class="bi bi-search"></i>
+                  <input type="text" class="form-control" id="txnSearch" placeholder="Search by description or category…">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <select class="form-select" id="txnTypeFilter">
+                  <option value="">All Flow Types</option>
+                  <option value="Income">Income (Revenue)</option>
+                  <option value="Expense">Expense (Costs)</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <select class="form-select" id="txnStatusFilter">
+                  <option value="">All Statuses</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
+              <div class="col-auto ms-auto">
+                <button class="btn btn-sm btn-outline-secondary" id="exportTxnBtn"><i class="bi bi-download me-1"></i>Export CSV</button>
+              </div>
             </div>
           </div>
           <div class="table-wrapper">
             <table class="table table-hover mb-0">
-              <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Flow Type</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody id="txnTable"></tbody>
             </table>
           </div>
-          <div class="card-body border-top d-flex justify-content-between align-items-center py-2">
+          <div class="card-body border-top d-flex justify-content-between align-items-center py-2 flex-wrap gap-2">
             <div class="text-muted" style="font-size:.82rem" id="txnPageInfo"></div>
             <div id="txnPagination"></div>
           </div>
@@ -66,21 +100,15 @@
       <div id="budget-panel" class="d-none">
         <div class="row g-3">
           <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header"><span class="card-title">Income by Category</span></div>
-              <div class="card-body"><div style="height:220px"><canvas id="incomeChart"></canvas></div></div>
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-transparent"><span class="card-title fw-bold">Revenue by Category</span></div>
+              <div class="card-body"><div style="height:240px"><canvas id="incomeChart"></canvas></div></div>
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header"><span class="card-title">Expense by Category</span></div>
-              <div class="card-body"><div style="height:220px"><canvas id="expenseChart"></canvas></div></div>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header"><span class="card-title">Monthly Summary</span></div>
-              <div class="card-body" id="budgetSummary"></div>
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-transparent"><span class="card-title fw-bold">Expenses by Category</span></div>
+              <div class="card-body"><div style="height:240px"><canvas id="expenseChart"></canvas></div></div>
             </div>
           </div>
         </div>
@@ -92,49 +120,199 @@
 
 <!-- Transaction Modal -->
 <div class="modal fade" id="txnModal" tabindex="-1">
-  <div class="modal-dialog"><div class="modal-content">
-    <div class="modal-header"><h6 class="modal-title" id="txnModalTitle">Add Transaction</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-      <div class="row g-3">
-        <div class="col-sm-6"><label class="form-label">Type</label>
-          <select class="form-select" id="txnType"><option value="Income">Income</option><option value="Expense">Expense</option></select></div>
-        <div class="col-sm-6"><label class="form-label">Date</label><input type="date" class="form-control" id="txnDate"></div>
-        <div class="col-12"><label class="form-label">Description *</label><input type="text" class="form-control" id="txnDesc"></div>
-        <div class="col-sm-6"><label class="form-label">Category</label>
-          <select class="form-select" id="txnCat">
-            <option>Project Revenue</option><option>Consulting</option><option>Maintenance</option>
-            <option>Salaries</option><option>Infrastructure</option><option>Marketing</option><option>Office</option><option>Other</option>
-          </select></div>
-        <div class="col-sm-6"><label class="form-label">Amount (USD) *</label><input type="number" class="form-control" id="txnAmount" placeholder="0"></div>
-        <div class="col-12"><label class="form-label">Status</label>
-          <select class="form-select" id="txnStatus"><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="txnModalTitle">Add Transaction</h6>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label">Flow Type</label>
+            <select class="form-select" id="txnType">
+              <option value="Income">Income (+)</option>
+              <option value="Expense">Expense (-)</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="txnDate">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description *</label>
+            <input type="text" class="form-control" id="txnDesc" placeholder="e.g. Q4 Cloud Hosting SLA Renewal" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="txnCat">
+              <option>Project Revenue</option>
+              <option>Consulting</option>
+              <option>Maintenance</option>
+              <option>Salaries</option>
+              <option>Infrastructure</option>
+              <option>Marketing</option>
+              <option>Office</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Amount (USD) *</label>
+            <input type="number" class="form-control" id="txnAmount" placeholder="5000" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="txnStatus">
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="saveTxnBtn"><i class="bi bi-check-lg me-1"></i>Save Transaction</button>
       </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" id="saveTxnBtn">Save</button></div>
-  </div></div>
+  </div>
 </div>
 
-<!-- Invoice Modal -->
+<!-- Create Invoice Modal -->
 <div class="modal fade" id="invModal" tabindex="-1">
-  <div class="modal-dialog modal-lg"><div class="modal-content">
-    <div class="modal-header"><h6 class="modal-title">Create Invoice</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-      <div class="row g-3">
-        <div class="col-sm-6"><label class="form-label">Client *</label><input type="text" class="form-control" id="invClient"></div>
-        <div class="col-sm-6"><label class="form-label">Invoice Date</label><input type="date" class="form-control" id="invDate"></div>
-        <div class="col-sm-6"><label class="form-label">Due Date</label><input type="date" class="form-control" id="invDue"></div>
-        <div class="col-sm-6"><label class="form-label">Amount (USD) *</label><input type="number" class="form-control" id="invAmount" oninput="calcTotal()"></div>
-        <div class="col-sm-6"><label class="form-label">Tax (%)</label><input type="number" class="form-control" id="invTax" value="10" oninput="calcTotal()"></div>
-        <div class="col-sm-6"><label class="form-label">Discount (USD)</label><input type="number" class="form-control" id="invDiscount" value="0" oninput="calcTotal()"></div>
-        <div class="col-12"><div class="card"><div class="card-body d-flex justify-content-between align-items-center">
-          <span>Total Amount</span><strong id="invTotal" style="font-size:1.2rem;color:var(--primary)">$0.00</strong>
-        </div></div></div>
-        <div class="col-12"><label class="form-label">Status</label>
-          <select class="form-select" id="invStatus"><option value="Pending">Pending</option><option value="Paid">Paid</option><option value="Overdue">Overdue</option></select></div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Create New Client Invoice</h6>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label">Client Name *</label>
+            <input type="text" class="form-control" id="invClient" placeholder="e.g. TechCorp Solutions" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Invoice Date</label>
+            <input type="date" class="form-control" id="invDate">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Payment Due Date</label>
+            <input type="date" class="form-control" id="invDue">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Subtotal Amount (USD) *</label>
+            <input type="number" class="form-control" id="invAmount" placeholder="25000" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Tax Rate (%)</label>
+            <input type="number" class="form-control" id="invTax" value="10">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label">Discount (USD)</label>
+            <input type="number" class="form-control" id="invDiscount" value="0">
+          </div>
+          <div class="col-12">
+            <div class="card bg-light border p-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold">Calculated Total Due:</span>
+                <span class="fs-4 fw-bold text-primary" id="invTotal">$0.00</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Initial Status</label>
+            <select class="form-select" id="invStatus">
+              <option value="Pending">Pending Payment</option>
+              <option value="Paid">Mark as Paid</option>
+              <option value="Overdue">Overdue</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="saveInvBtn"><i class="bi bi-file-earmark-check me-1"></i>Issue Invoice</button>
       </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" id="saveInvBtn">Create Invoice</button></div>
-  </div></div>
+  </div>
+</div>
+
+<!-- Invoice Preview Modal (Section 8 requirement) -->
+<div class="modal fade" id="invoicePreviewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title fw-bold">Invoice Preview</h6>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" id="printableInvoice">
+        <div class="border rounded-3 p-4 bg-white shadow-sm">
+          <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-4">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="brand-icon bg-primary text-white rounded p-1 d-inline-flex"><i class="bi bi-shield-check fs-5"></i></div>
+                <h4 class="fw-bold mb-0 text-dark">Enterprise360</h4>
+              </div>
+              <p class="text-muted small mb-0">123 Enterprise Blvd, Tech Hub<br>support@enterprise360.com | +1-555-0100</p>
+            </div>
+            <div class="text-end">
+              <span id="prevInvStatusBadge" class="badge bg-success px-3 py-2 fs-6">PAID</span>
+              <h5 class="fw-bold mt-2 mb-0" id="prevInvNumber">INV-2026-001</h5>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-sm-6">
+              <p class="text-muted small text-uppercase fw-bold mb-1">Billed To:</p>
+              <h6 class="fw-bold text-dark" id="prevInvClient">TechCorp Ltd.</h6>
+              <p class="text-muted small mb-0">Enterprise Client Services Account</p>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+              <p class="text-muted small mb-1"><strong>Invoice Date:</strong> <span id="prevInvDate">Nov 01, 2026</span></p>
+              <p class="text-muted small mb-0"><strong>Due Date:</strong> <span id="prevInvDue">Nov 30, 2026</span></p>
+            </div>
+          </div>
+
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Description</th>
+                  <th class="text-end">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Professional Enterprise Consulting & Implementation Services</td>
+                  <td class="text-end" id="prevInvSubtotal">$25,000</td>
+                </tr>
+                <tr>
+                  <td class="text-end">Estimated Applicable Tax (10%)</td>
+                  <td class="text-end text-muted" id="prevInvTax">$2,500</td>
+                </tr>
+                <tr>
+                  <td class="text-end">Applicable Discount</td>
+                  <td class="text-end text-success" id="prevInvDiscount">-$500</td>
+                </tr>
+                <tr class="table-light fw-bold fs-5">
+                  <td class="text-end">Total Balance Due</td>
+                  <td class="text-end text-primary" id="prevInvTotal">$27,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-top pt-3 text-center text-muted small">
+            Thank you for partnering with Enterprise360. Please remit electronic payment within the stated due date.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" id="printInvoiceBtn"><i class="bi bi-printer me-1"></i>Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -144,218 +322,6 @@
 <script src="../js/utils.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/app.js"></script>
-<script>
-(function() {
-  const { Storage, Session } = window.E360;
-  const { showToast, genId, formatDate, formatDateTime, timeAgo, today, formatCurrency, getInitials, avatarColor, avatarHtml, statusBadge, priorityBadge, debounce, throttle, confirm, paginate, renderPagination, searchFilter, sortBy, exportCSV, previewImage, fetchData, skeletonRow, showLoading } = window.E360.Utils;
-  const { Auth, getSampleData } = window.E360;
-  const { initPage, renderSidebar, renderTopbar } = window.E360.App;
-
-
-  let transactions=[], invoices=[]; let txnModal, invModal; let txnPage=1; const PER=8; let editTxnId=null;
-
-  async function init() {
-    const user = await initPage('Finance', 'finance.html');
-    if (!user) return;
-    const data = await getSampleData();
-    transactions = Storage.get('transactions', data.transactions);
-    invoices     = Storage.get('invoices', data.invoices);
-    txnModal = new bootstrap.Modal(document.getElementById('txnModal'));
-    invModal = new bootstrap.Modal(document.getElementById('invModal'));
-
-    renderStats(); renderTxnTable(); renderInvoices();
-
-    document.getElementById('addTxnBtn').addEventListener('click', openAddTxn);
-    document.getElementById('createInvBtn').addEventListener('click', () => { document.getElementById('invDate').value=new Date().toISOString().split('T')[0]; invModal.show(); });
-    document.getElementById('saveTxnBtn').addEventListener('click', saveTxn);
-    document.getElementById('saveInvBtn').addEventListener('click', saveInvoice);
-    document.getElementById('txnSearch').addEventListener('input', debounce(() => { txnPage=1; renderTxnTable(); }, 300));
-    document.getElementById('txnTypeFilter').addEventListener('change', () => { txnPage=1; renderTxnTable(); });
-    document.getElementById('txnStatusFilter').addEventListener('change', () => { txnPage=1; renderTxnTable(); });
-    document.getElementById('exportTxnBtn').addEventListener('click', () => exportCSV(transactions, 'transactions.csv'));
-
-    // Tabs
-    document.querySelectorAll('#finTabs .nav-link').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#finTabs .nav-link').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        ['txn','invoices','budget'].forEach(t => document.getElementById(t+'-panel').classList.toggle('d-none', btn.dataset.tab !== t));
-        if (btn.dataset.tab === 'budget') renderBudgetCharts();
-      });
-    });
-  }
-
-  function renderStats() {
-    const income  = transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+t.amount,0);
-    const expense = transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+t.amount,0);
-    const profit  = income - expense;
-    const pending = invoices.filter(i=>i.status==='Pending').length;
-    const overdue = invoices.filter(i=>i.status==='Overdue').length;
-    document.getElementById('finStats').innerHTML = [
-      {label:'Total Revenue',value:formatCurrency(income),icon:'bi-graph-up',bg:'bg-success-soft'},
-      {label:'Total Expenses',value:formatCurrency(expense),icon:'bi-graph-down',bg:'bg-danger-soft'},
-      {label:'Net Profit',value:formatCurrency(profit),icon:'bi-currency-dollar',bg: profit>=0 ? 'bg-primary-soft':'bg-warning-soft'},
-      {label:'Pending Invoices',value:pending,icon:'bi-file-earmark-text',bg:'bg-warning-soft'},
-      {label:'Overdue Invoices',value:overdue,icon:'bi-exclamation-triangle',bg:'bg-danger-soft'},
-    ].map(s=>`<div class="col-sm-6 col-lg"><div class="stat-card"><div class="stat-icon ${s.bg}"><i class="bi ${s.icon}"></i></div><div class="stat-info"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div></div></div>`).join('');
-  }
-
-  function getTxnFiltered() {
-    let list = [...transactions];
-    const q  = document.getElementById('txnSearch').value;
-    const tp = document.getElementById('txnTypeFilter').value;
-    const st = document.getElementById('txnStatusFilter').value;
-    if (q)  list = searchFilter(list,q,['description','category']);
-    if (tp) list = list.filter(t=>t.type===tp);
-    if (st) list = list.filter(t=>t.status===st);
-    return list;
-  }
-
-  function renderTxnTable() {
-    const filtered = getTxnFiltered();
-    const pager = paginate(filtered, txnPage, PER);
-    document.getElementById('txnPageInfo').textContent=`Showing ${(txnPage-1)*PER+1}–${Math.min(txnPage*PER,filtered.length)} of ${filtered.length}`;
-    const statusCls={Paid:'badge-paid',Pending:'badge-pending'};
-    document.getElementById('txnTable').innerHTML = pager.items.length ? pager.items.map(t => `
-      <tr>
-        <td style="font-size:.82rem">${formatDate(t.date)}</td>
-        <td style="font-size:.85rem;font-weight:500">${t.description}</td>
-        <td><span class="badge bg-secondary bg-opacity-10 text-secondary" style="font-size:.75rem">${t.category}</span></td>
-        <td><span class="badge ${t.type==='Income'?'bg-success':'bg-danger'} bg-opacity-10 ${t.type==='Income'?'text-success':'text-danger'}" style="font-size:.75rem">${t.type}</span></td>
-        <td style="font-size:.85rem;font-weight:600;color:${t.type==='Income'?'var(--success)':'var(--danger)'}">${t.type==='Income'?'+':'-'}${formatCurrency(t.amount)}</td>
-        <td><span class="badge-status ${statusCls[t.status]||'badge-pending'}">${t.status}</span></td>
-        <td><div class="d-flex gap-1">
-          <button class="btn-icon edit-txn" data-id="${t.id}" title="Edit"><i class="bi bi-pencil"></i></button>
-          <button class="btn-icon text-danger del-txn" data-id="${t.id}" title="Delete"><i class="bi bi-trash"></i></button>
-        </div></td>
-      </tr>`).join('')
-      : `<tr><td colspan="7"><div class="empty-state"><i class="bi bi-receipt"></i><h6>No transactions found</h6></div></td></tr>`;
-    document.getElementById('txnPagination').innerHTML = renderPagination(pager, p=>{txnPage=p;renderTxnTable();});
-    document.querySelectorAll('.edit-txn').forEach(b=>b.addEventListener('click',()=>openEditTxn(+b.dataset.id)));
-    document.querySelectorAll('.del-txn').forEach(b=>b.addEventListener('click',()=>delTxn(+b.dataset.id)));
-  }
-
-  function renderInvoices() {
-    const statusColors={Paid:'success',Pending:'warning',Overdue:'danger'};
-    document.getElementById('invoiceGrid').innerHTML = invoices.map(inv => `
-      <div class="col-sm-6 col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between mb-3">
-              <div>
-                <div class="fw-bold" style="font-size:.88rem">${inv.id}</div>
-                <div class="text-muted" style="font-size:.78rem">${inv.client}</div>
-              </div>
-              <span class="badge bg-${statusColors[inv.status]||'secondary'} bg-opacity-15 text-${statusColors[inv.status]||'secondary'}">${inv.status}</span>
-            </div>
-            <div class="d-flex justify-content-between text-muted mb-1" style="font-size:.78rem">
-              <span>Sub-total</span><span>${formatCurrency(inv.amount)}</span>
-            </div>
-            <div class="d-flex justify-content-between text-muted mb-1" style="font-size:.78rem">
-              <span>Tax</span><span>${formatCurrency(inv.tax)}</span>
-            </div>
-            <div class="d-flex justify-content-between text-muted mb-2" style="font-size:.78rem">
-              <span>Discount</span><span>-${formatCurrency(inv.discount)}</span>
-            </div>
-            <div class="d-flex justify-content-between fw-bold border-top pt-2">
-              <span>Total</span><span style="color:var(--primary)">${formatCurrency(inv.total)}</span>
-            </div>
-            <div class="mt-2 text-muted" style="font-size:.75rem">
-              Issued: ${formatDate(inv.date)} · Due: ${formatDate(inv.dueDate)}
-            </div>
-          </div>
-          <div class="card-body border-top py-2 d-flex gap-2">
-            <button class="btn btn-sm btn-outline-${statusColors[inv.status]} flex-1 mark-paid" data-id="${inv.id}" data-status="${inv.status}">
-              ${inv.status==='Paid'?'<i class="bi bi-check me-1"></i>Paid':'<i class="bi bi-check me-1"></i>Mark Paid'}
-            </button>
-            <button class="btn btn-sm btn-outline-danger del-inv" data-id="${inv.id}"><i class="bi bi-trash"></i></button>
-          </div>
-        </div>
-      </div>`).join('') || `<div class="col-12"><div class="empty-state card"><i class="bi bi-file-earmark-text"></i><h6>No invoices yet</h6></div></div>`;
-    document.querySelectorAll('.mark-paid').forEach(b=>b.addEventListener('click',()=>{
-      const inv=invoices.find(i=>i.id===b.dataset.id);
-      if(inv && inv.status!=='Paid'){inv.status='Paid';Storage.set('invoices',invoices);renderInvoices();renderStats();showToast('Invoice marked as paid!','success');}
-    }));
-    document.querySelectorAll('.del-inv').forEach(b=>b.addEventListener('click',async()=>{
-      const ok=await confirm('Delete this invoice?'); if(!ok) return;
-      invoices=invoices.filter(i=>i.id!==b.dataset.id);Storage.set('invoices',invoices);renderInvoices();renderStats();
-      showToast('Invoice deleted.','danger');
-    }));
-  }
-
-  function renderBudgetCharts() {
-    const incomeByCat={}, expByCat={};
-    transactions.forEach(t => {
-      if(t.type==='Income') incomeByCat[t.category]=(incomeByCat[t.category]||0)+t.amount;
-      else expByCat[t.category]=(expByCat[t.category]||0)+t.amount;
-    });
-    const COLORS=['#4f46e5','#06b6d4','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6'];
-    ['incomeChart','expenseChart'].forEach((id,idx) => {
-      const data = idx===0?incomeByCat:expByCat;
-      const ctx = document.getElementById(id).getContext('2d');
-      if(Chart.getChart(id)) Chart.getChart(id).destroy();
-      new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(data),datasets:[{data:Object.values(data),backgroundColor:COLORS,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},color:'var(--text-muted)'},padding:10}}}});
-    });
-  }
-
-  function openAddTxn() {
-    editTxnId=null; document.getElementById('txnModalTitle').textContent='Add Transaction';
-    document.getElementById('txnDate').value=new Date().toISOString().split('T')[0];
-    document.getElementById('txnDesc').value='';
-    document.getElementById('txnAmount').value='';
-    document.getElementById('txnType').value='Income';
-    document.getElementById('txnStatus').value='Paid';
-    txnModal.show();
-  }
-  function openEditTxn(id) {
-    editTxnId=id; const t=transactions.find(t=>t.id===id); if(!t) return;
-    document.getElementById('txnModalTitle').textContent='Edit Transaction';
-    document.getElementById('txnDate').value=t.date;
-    document.getElementById('txnDesc').value=t.description;
-    document.getElementById('txnAmount').value=t.amount;
-    document.getElementById('txnType').value=t.type;
-    document.getElementById('txnCat').value=t.category;
-    document.getElementById('txnStatus').value=t.status;
-    txnModal.show();
-  }
-  async function delTxn(id) {
-    const ok=await confirm('Delete this transaction?'); if(!ok) return;
-    transactions=transactions.filter(t=>t.id!==id);
-    Storage.set('transactions',transactions); renderStats(); renderTxnTable();
-    showToast('Transaction deleted.','danger');
-  }
-  function saveTxn() {
-    const desc=document.getElementById('txnDesc').value.trim();
-    const amt=parseFloat(document.getElementById('txnAmount').value);
-    if (!desc||!amt) { showToast('Description and amount required.','warning'); return; }
-    const txn={id:editTxnId||genId(),type:document.getElementById('txnType').value,description:desc,category:document.getElementById('txnCat').value,amount:amt,date:document.getElementById('txnDate').value,status:document.getElementById('txnStatus').value};
-    if(editTxnId){const idx=transactions.findIndex(t=>t.id===editTxnId);if(idx!==-1)transactions[idx]={...transactions[idx],...txn};}
-    else transactions.push(txn);
-    Storage.set('transactions',transactions); txnModal.hide(); renderStats(); renderTxnTable();
-    showToast(editTxnId?'Transaction updated!':'Transaction added!','success');
-  }
-  function saveInvoice() {
-    const client=document.getElementById('invClient').value.trim();
-    const amount=parseFloat(document.getElementById('invAmount').value)||0;
-    if(!client||!amount) { showToast('Client and amount required.','warning'); return; }
-    const tax=amount*(parseFloat(document.getElementById('invTax').value)||0)/100;
-    const disc=parseFloat(document.getElementById('invDiscount').value)||0;
-    const inv={id:'INV-'+String(invoices.length+1).padStart(3,'0'),client,amount,tax:Math.round(tax),discount:disc,total:Math.round(amount+tax-disc),date:document.getElementById('invDate').value,dueDate:document.getElementById('invDue').value,status:document.getElementById('invStatus').value};
-    invoices.push(inv); Storage.set('invoices',invoices); invModal.hide(); renderInvoices(); renderStats();
-    showToast('Invoice created!','success');
-  }
-
-  window.calcTotal = () => {
-    const amount=parseFloat(document.getElementById('invAmount').value)||0;
-    const taxPct=parseFloat(document.getElementById('invTax').value)||0;
-    const disc=parseFloat(document.getElementById('invDiscount').value)||0;
-    const total=amount+(amount*taxPct/100)-disc;
-    document.getElementById('invTotal').textContent = '$'+Math.max(0,total).toFixed(2);
-  };
-
-  init();
-
-})();
-</script>
+<script src="../js/finance.js"></script>
 </body>
 </html>
