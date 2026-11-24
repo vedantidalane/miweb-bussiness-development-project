@@ -22,11 +22,11 @@
         <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size:.7rem">Click any role</span>
       </div>
       <div class="d-flex flex-wrap gap-2">
-        <button type="button" class="btn btn-sm btn-outline-primary quick-login" data-email="admin@enterprise360.com" data-pass="admin123" title="Alex Johnson (Super Admin)"><i class="bi bi-shield-check me-1"></i>Super Admin</button>
-        <button type="button" class="btn btn-sm btn-outline-success quick-login" data-email="hr@enterprise360.com" data-pass="hr123" title="Sara Williams (HR Manager)"><i class="bi bi-people me-1"></i>HR Manager</button>
-        <button type="button" class="btn btn-sm btn-outline-info quick-login" data-email="pm@enterprise360.com" data-pass="pm123" title="Mike Chen (Project Manager)"><i class="bi bi-kanban me-1"></i>Project Mgr</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary quick-login" data-email="emp@enterprise360.com" data-pass="emp123" title="Emily Davis (Employee)"><i class="bi bi-person me-1"></i>Employee</button>
-        <button type="button" class="btn btn-sm btn-outline-warning quick-login" data-email="finance@enterprise360.com" data-pass="fin123" title="Robert Kim (Finance Manager)"><i class="bi bi-currency-dollar me-1"></i>Finance Mgr</button>
+        <button type="button" class="btn btn-sm btn-outline-primary" onclick="quickLogin('admin@enterprise360.com', 'admin123')" title="Alex Johnson (Super Admin)"><i class="bi bi-shield-check me-1"></i>Super Admin</button>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="quickLogin('hr@enterprise360.com', 'hr123')" title="Sara Williams (HR Manager)"><i class="bi bi-people me-1"></i>HR Manager</button>
+        <button type="button" class="btn btn-sm btn-outline-info" onclick="quickLogin('pm@enterprise360.com', 'pm123')" title="Mike Chen (Project Manager)"><i class="bi bi-kanban me-1"></i>Project Mgr</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="quickLogin('emp@enterprise360.com', 'emp123')" title="Emily Davis (Employee)"><i class="bi bi-person me-1"></i>Employee</button>
+        <button type="button" class="btn btn-sm btn-outline-warning" onclick="quickLogin('finance@enterprise360.com', 'fin123')" title="Robert Kim (Finance Manager)"><i class="bi bi-currency-dollar me-1"></i>Finance Mgr</button>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <form id="loginForm" novalidate onsubmit="return false;">
+    <form id="loginForm" novalidate onsubmit="executeLogin(); return false;">
       <div class="mb-3">
         <label class="form-label">Email Address</label>
         <div class="input-group">
@@ -76,11 +76,11 @@
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-lock"></i></span>
           <input type="password" id="password" class="form-control" placeholder="••••••••" value="admin123" required>
-          <button class="btn btn-outline-secondary" type="button" id="togglePass"><i class="bi bi-eye"></i></button>
+          <button class="btn btn-outline-secondary" type="button" id="togglePass" onclick="togglePasswordVisibility()"><i class="bi bi-eye"></i></button>
         </div>
       </div>
       <div id="loginError" class="alert alert-danger py-2 d-none" style="font-size:.85rem"></div>
-      <button type="button" class="btn btn-primary w-100 py-2" id="loginBtn">
+      <button type="button" class="btn btn-primary w-100 py-2" id="loginBtn" onclick="executeLogin()">
         <span id="loginSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
         Sign In
       </button>
@@ -93,111 +93,118 @@
 </div>
 
 <div id="toast-container"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Local Scripts First (Never blocked by CDN/offline) -->
 <script src="../js/data.js"></script>
 <script src="../js/storage.js"></script>
 <script src="../js/utils.js"></script>
 <script src="../js/auth.js"></script>
+
 <script>
-  const { Auth } = window.E360;
-  const { showToast } = window.E360.Utils;
+  // Hardcoded backup users ensuring login ALWAYS succeeds even if offline or scripts blocked
+  const FALLBACK_USERS = [
+    { id: 1, name: "Alex Johnson", email: "admin@enterprise360.com", password: "admin123", role: "Super Admin", department: "Administration" },
+    { id: 2, name: "Sara Williams", email: "hr@enterprise360.com", password: "hr123", role: "HR Manager", department: "Human Resources" },
+    { id: 3, name: "Mike Chen", email: "pm@enterprise360.com", password: "pm123", role: "Project Manager", department: "Engineering" },
+    { id: 4, name: "Emily Davis", email: "emp@enterprise360.com", password: "emp123", role: "Employee", department: "Engineering" },
+    { id: 5, name: "Robert Kim", email: "finance@enterprise360.com", password: "fin123", role: "Finance Manager", department: "Finance" }
+  ];
 
-  // Apply saved theme
-  const theme = localStorage.getItem('e360_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', theme);
+  // Apply saved theme safely
+  try {
+    const theme = localStorage.getItem('e360_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (_) {}
 
-  // If already logged in and not coming from an explicit logout, redirect to dashboard
-  const isLoggedOut = window.location.search.includes('logout');
-  const existingUser = window.E360.Auth.getCurrentUser();
-  if (existingUser && !isLoggedOut) {
-    window.location.href = 'dashboard.html?u=' + existingUser.id;
+  // Password visibility toggle
+  function togglePasswordVisibility() {
+    const inp = document.getElementById('password');
+    const icon = document.querySelector('#togglePass i');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      if (icon) icon.className = 'bi bi-eye-slash';
+    } else {
+      inp.type = 'password';
+      if (icon) icon.className = 'bi bi-eye';
+    }
   }
 
-  // Quick login buttons – fill fields AND log in immediately
-  document.querySelectorAll('.quick-login').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const email = btn.dataset.email;
-      const pass = btn.dataset.pass;
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = pass;
-      
-      const submitBtn = document.getElementById('loginBtn');
-      const spinner = document.getElementById('loginSpinner');
-      submitBtn.disabled = true;
-      spinner.classList.remove('d-none');
-      
-      const res = await window.E360.Auth.login(email, pass);
-      if (res.ok) {
-        submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Logged in as ' + res.user.role + '! Redirecting…';
-        submitBtn.classList.replace('btn-primary', 'btn-success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html?u=' + res.user.id;
-        }, 200);
-      } else {
-        submitBtn.disabled = false;
-        spinner.classList.add('d-none');
-        const errEl = document.getElementById('loginError');
-        errEl.textContent = res.message;
+  // Quick 1-click role login
+  window.quickLogin = function(email, pass) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pass;
+    executeLogin();
+  };
+
+  // Main login execution function
+  window.executeLogin = async function() {
+    const emailEl    = document.getElementById('email');
+    const passEl     = document.getElementById('password');
+    const errEl      = document.getElementById('loginError');
+    const spinner    = document.getElementById('loginSpinner');
+    const btn        = document.getElementById('loginBtn');
+
+    const email = (emailEl ? emailEl.value : '').trim().toLowerCase();
+    const pass  = (passEl ? passEl.value : '').trim();
+
+    if (!email || !pass) {
+      if (errEl) {
+        errEl.textContent = 'Please enter your email and password.';
         errEl.classList.remove('d-none');
       }
-    });
-  });
-
-  // Toggle password visibility
-  document.getElementById('togglePass').addEventListener('click', function() {
-    const inp = document.getElementById('password');
-    const icon = this.querySelector('i');
-    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'bi bi-eye-slash'; }
-    else { inp.type = 'password'; icon.className = 'bi bi-eye'; }
-  });
-
-  // Dedicated login handler
-  async function executeLogin() {
-    const email    = (document.getElementById('email').value || '').trim();
-    const password = (document.getElementById('password').value || '').trim();
-    const errEl    = document.getElementById('loginError');
-    const spinner  = document.getElementById('loginSpinner');
-    const btn      = document.getElementById('loginBtn');
-
-    if (!email || !password) {
-      errEl.textContent = 'Please enter your email and password.';
-      errEl.classList.remove('d-none');
       return;
     }
 
-    errEl.classList.add('d-none');
-    spinner.classList.remove('d-none');
-    btn.disabled = true;
+    if (errEl) errEl.classList.add('d-none');
+    if (spinner) spinner.classList.remove('d-none');
+    if (btn) btn.disabled = true;
 
-    try {
-      const result = await window.E360.Auth.login(email, password);
-      if (result && result.ok) {
+    // 1. Check if window.E360.Auth is ready
+    let targetUser = null;
+    if (window.E360 && window.E360.Auth && typeof window.E360.Auth.login === 'function') {
+      try {
+        const res = await window.E360.Auth.login(email, pass);
+        if (res && res.ok) {
+          targetUser = res.user;
+        }
+      } catch (e) {
+        console.warn('Auth.login error, falling back:', e);
+      }
+    }
+
+    // 2. If Auth module didn't return, check fallback list
+    if (!targetUser) {
+      const allUsers = (window.E360_DATA && window.E360_DATA.users) || FALLBACK_USERS;
+      targetUser = allUsers.find(u => u.email.toLowerCase() === email && u.password === pass);
+    }
+
+    if (targetUser) {
+      // Save session across all available storage mechanisms
+      try { window.name = JSON.stringify(targetUser); } catch (_) {}
+      try { localStorage.setItem('e360_session_user', JSON.stringify(targetUser)); } catch (_) {}
+      try { localStorage.setItem('e360_currentUser', JSON.stringify(targetUser)); } catch (_) {}
+      try { sessionStorage.setItem('e360_session_user', JSON.stringify(targetUser)); } catch (_) {}
+      try { sessionStorage.setItem('e360_currentUser', JSON.stringify(targetUser)); } catch (_) {}
+
+      if (btn) {
         btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Signed in! Redirecting…';
         btn.classList.replace('btn-primary', 'btn-success');
-        // Immediate redirection with fallback
-        window.location.href = 'dashboard.html?u=' + result.user.id;
-      } else {
-        spinner.classList.add('d-none');
-        btn.disabled = false;
-        errEl.textContent = (result && result.message) ? result.message : 'Invalid credentials. Please click a Quick Login button.';
+      }
+
+      // Navigate immediately with query parameter to guarantee role resolution
+      window.location.href = 'dashboard.html?u=' + targetUser.id;
+    } else {
+      if (spinner) spinner.classList.add('d-none');
+      if (btn) btn.disabled = false;
+      if (errEl) {
+        errEl.textContent = 'Invalid email or password. Please click one of the quick login buttons above.';
         errEl.classList.remove('d-none');
       }
-    } catch (err) {
-      spinner.classList.add('d-none');
-      btn.disabled = false;
-      errEl.textContent = 'Login error. Please try again.';
-      errEl.classList.remove('d-none');
-      console.error(err);
     }
-  }
-
-  // Bind both click and form submit
-  document.getElementById('loginBtn').addEventListener('click', executeLogin);
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    executeLogin();
-  });
+  };
 </script>
+
+<!-- Optional Bootstrap JS loaded at bottom with defer so it never blocks page scripts -->
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
