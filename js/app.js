@@ -57,7 +57,7 @@ function renderSidebar(currentPage) {
   if (!sidebar) return;
   sidebar.innerHTML = `
     <div class="sidebar-brand">
-      <div class="brand-icon"><i class="bi bi-shield-check text-white"></i></div>
+      <div class="brand-icon"><img src="../assets/images/logo.svg" alt="Enterprise360" width="30" height="30" onerror="this.outerHTML='<i class=\'bi bi-shield-check text-white\'></i>'"></div>
       <div class="brand-text-wrap">
         <div class="brand-text">Enterprise360</div>
         <div class="brand-subtext">Grow Together</div>

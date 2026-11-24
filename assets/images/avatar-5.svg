@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="av5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="50" fill="url(#av5)"/>
+  <!-- Head -->
+  <circle cx="50" cy="39" r="17" fill="#fde68a"/>
+  <!-- Hair (Short styled) -->
+  <path d="M34 33 C34 22, 66 22, 66 33 C64 27, 36 27, 34 33 Z" fill="#18181b"/>
+  <!-- Beard -->
+  <path d="M40 46 C40 54, 60 54, 60 46 C58 52, 42 52, 40 46 Z" fill="#27272a"/>
+  <!-- Eyes -->
+  <circle cx="44" cy="38" r="2.2" fill="#18181b"/>
+  <circle cx="56" cy="38" r="2.2" fill="#18181b"/>
+  <!-- Smile -->
+  <path d="M46 47 Q50 50 54 47" stroke="#18181b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- Body -->
+  <path d="M22 92 C22 71, 32 64, 50 64 C68 64, 78 71, 78 92 Z" fill="#1e1b4b"/>
+  <!-- Shirt -->
+  <polygon points="46,64 50,74 54,64" fill="#ffffff"/>
+  <polygon points="49,65 51,65 50,85" stroke="#ef4444" stroke-width="2"/>
+</svg>

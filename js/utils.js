@@ -48,11 +48,22 @@ const avatarColor = (name = '') => {
   return AVATAR_COLORS[h % AVATAR_COLORS.length];
 };
 
+/* ---- Avatar image resolver ---- */
+const getAvatarSrc = (name = '') => {
+  if (!name) return '';
+  let h = 0;
+  for (let c of name) h = (h * 31 + c.charCodeAt(0)) & 0xFFFF;
+  const num = (h % 5) + 1;
+  const isPages = window.location.pathname.includes('/pages/') || window.location.pathname.includes('\\pages\\');
+  return (isPages ? '../assets/images/' : 'assets/images/') + `avatar-${num}.svg`;
+};
+
 const avatarHtml = (name = '', size = '', imgSrc = '') => {
   const initials = getInitials(name);
   const color = avatarColor(name);
-  if (imgSrc) {
-    return `<div class="avatar ${size}" style="background:${color}"><img src="${imgSrc}" alt="${name}"></div>`;
+  const src = imgSrc || getAvatarSrc(name);
+  if (src) {
+    return `<div class="avatar ${size}" style="background:${color}"><img src="${src}" alt="${name}" onerror="this.style.display='none';this.parentElement.textContent='${initials}'"></div>`;
   }
   return `<div class="avatar ${size}" style="background:${color}">${initials}</div>`;
 };
