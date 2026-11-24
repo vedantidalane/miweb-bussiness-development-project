@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <form id="loginForm" novalidate>
+    <form id="loginForm" novalidate onsubmit="return false;">
       <div class="mb-3">
         <label class="form-label">Email Address</label>
         <div class="input-group">
@@ -80,7 +80,7 @@
         </div>
       </div>
       <div id="loginError" class="alert alert-danger py-2 d-none" style="font-size:.85rem"></div>
-      <button type="submit" class="btn btn-primary w-100 py-2" id="loginBtn">
+      <button type="button" class="btn btn-primary w-100 py-2" id="loginBtn">
         <span id="loginSpinner" class="spinner-border spinner-border-sm me-2 d-none"></span>
         Sign In
       </button>
@@ -152,11 +152,10 @@
     else { inp.type = 'password'; icon.className = 'bi bi-eye'; }
   });
 
-  // Form submit
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email    = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
+  // Dedicated login handler
+  async function executeLogin() {
+    const email    = (document.getElementById('email').value || '').trim();
+    const password = (document.getElementById('password').value || '').trim();
     const errEl    = document.getElementById('loginError');
     const spinner  = document.getElementById('loginSpinner');
     const btn      = document.getElementById('loginBtn');
@@ -171,24 +170,33 @@
     spinner.classList.remove('d-none');
     btn.disabled = true;
 
-    // Small delay for UX (shows spinner briefly)
-    await new Promise(r => setTimeout(r, 200));
-
-    const result = await window.E360.Auth.login(email, password);
-
-    spinner.classList.add('d-none');
-    btn.disabled = false;
-
-    if (result.ok) {
-      btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Logged in! Redirecting…';
-      btn.classList.replace('btn-primary', 'btn-success');
-      setTimeout(() => {
+    try {
+      const result = await window.E360.Auth.login(email, password);
+      if (result && result.ok) {
+        btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Signed in! Redirecting…';
+        btn.classList.replace('btn-primary', 'btn-success');
+        // Immediate redirection with fallback
         window.location.href = 'dashboard.html?u=' + result.user.id;
-      }, 300);
-    } else {
-      errEl.textContent = result.message;
+      } else {
+        spinner.classList.add('d-none');
+        btn.disabled = false;
+        errEl.textContent = (result && result.message) ? result.message : 'Invalid credentials. Please click a Quick Login button.';
+        errEl.classList.remove('d-none');
+      }
+    } catch (err) {
+      spinner.classList.add('d-none');
+      btn.disabled = false;
+      errEl.textContent = 'Login error. Please try again.';
       errEl.classList.remove('d-none');
+      console.error(err);
     }
+  }
+
+  // Bind both click and form submit
+  document.getElementById('loginBtn').addEventListener('click', executeLogin);
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    executeLogin();
   });
 </script>
 </body>

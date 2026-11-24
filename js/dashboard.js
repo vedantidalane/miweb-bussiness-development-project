@@ -135,100 +135,104 @@
   ═══════════════════════════════════════════════════ */
   function renderRevenueChart(txns, days) {
     const canvas = document.getElementById('revenueChart');
-    if (!canvas) return;
+    if (!canvas || typeof Chart === 'undefined') return;
 
-    const months   = days ? Math.ceil(days / 30) : 6;
-    const labels   = [];
-    const revenues = [];
-    const expenses = [];
+    try {
+      const months   = days ? Math.ceil(days / 30) : 6;
+      const labels   = [];
+      const revenues = [];
+      const expenses = [];
 
-    for (let i = months - 1; i >= 0; i--) {
-      const d  = new Date();
-      d.setDate(1);
-      d.setMonth(d.getMonth() - i);
-      const ym  = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const lbl = d.toLocaleString('en-US', { month: 'short', year: '2-digit' });
-      labels.push(lbl);
-      revenues.push(txns.filter(t => t.type === 'Income'  && t.date.startsWith(ym)).reduce((s, t) => s + t.amount, 0));
-      expenses.push(txns.filter(t => t.type === 'Expense' && t.date.startsWith(ym)).reduce((s, t) => s + t.amount, 0));
-    }
+      for (let i = months - 1; i >= 0; i--) {
+        const d  = new Date();
+        d.setDate(1);
+        d.setMonth(d.getMonth() - i);
+        const ym  = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const lbl = d.toLocaleString('en-US', { month: 'short', year: '2-digit' });
+        labels.push(lbl);
+        revenues.push(txns.filter(t => t.type === 'Income'  && t.date.startsWith(ym)).reduce((s, t) => s + t.amount, 0));
+        expenses.push(txns.filter(t => t.type === 'Expense' && t.date.startsWith(ym)).reduce((s, t) => s + t.amount, 0));
+      }
 
-    const dark  = document.documentElement.getAttribute('data-theme') === 'dark';
-    const grid  = dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.07)';
-    const ticks = dark ? '#94a3b8' : '#64748b';
+      const dark  = document.documentElement.getAttribute('data-theme') === 'dark';
+      const grid  = dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.07)';
+      const ticks = dark ? '#94a3b8' : '#64748b';
 
-    if (revenueChart) revenueChart.destroy();
+      if (revenueChart) revenueChart.destroy();
 
-    const ctx = canvas.getContext('2d');
-    const gradient1 = ctx.createLinearGradient(0, 0, 0, 250);
-    gradient1.addColorStop(0,   'rgba(79,70,229,.35)');
-    gradient1.addColorStop(1,   'rgba(79,70,229,.0)');
-    const gradient2 = ctx.createLinearGradient(0, 0, 0, 250);
-    gradient2.addColorStop(0,   'rgba(139,92,246,.35)');
-    gradient2.addColorStop(1,   'rgba(139,92,246,.0)');
+      const ctx = canvas.getContext('2d');
+      const gradient1 = ctx.createLinearGradient(0, 0, 0, 250);
+      gradient1.addColorStop(0,   'rgba(79,70,229,.35)');
+      gradient1.addColorStop(1,   'rgba(79,70,229,.0)');
+      const gradient2 = ctx.createLinearGradient(0, 0, 0, 250);
+      gradient2.addColorStop(0,   'rgba(139,92,246,.35)');
+      gradient2.addColorStop(1,   'rgba(139,92,246,.0)');
 
-    revenueChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Revenue',
-            data: revenues,
-            borderColor: '#4f46e5',
-            backgroundColor: gradient1,
-            borderWidth: 2.5,
-            tension: 0.45,
-            fill: true,
-            pointBackgroundColor: '#4f46e5',
-            pointRadius: 4,
-            pointHoverRadius: 6
-          },
-          {
-            label: 'Expenses',
-            data: expenses,
-            borderColor: '#8b5cf6',
-            backgroundColor: gradient2,
-            borderWidth: 2.5,
-            tension: 0.45,
-            fill: true,
-            pointBackgroundColor: '#8b5cf6',
-            pointRadius: 4,
-            pointHoverRadius: 6
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: dark ? '#1e293b' : '#fff',
-            titleColor: dark ? '#e2e8f0' : '#1e293b',
-            bodyColor: dark ? '#94a3b8' : '#475569',
-            borderColor: dark ? '#334155' : '#e2e8f0',
-            borderWidth: 1,
-            padding: 12,
-            callbacks: {
-              label: ctx => ` ${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`
+      revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Revenue',
+              data: revenues,
+              borderColor: '#4f46e5',
+              backgroundColor: gradient1,
+              borderWidth: 2.5,
+              tension: 0.45,
+              fill: true,
+              pointBackgroundColor: '#4f46e5',
+              pointRadius: 4,
+              pointHoverRadius: 6
+            },
+            {
+              label: 'Expenses',
+              data: expenses,
+              borderColor: '#8b5cf6',
+              backgroundColor: gradient2,
+              borderWidth: 2.5,
+              tension: 0.45,
+              fill: true,
+              pointBackgroundColor: '#8b5cf6',
+              pointRadius: 4,
+              pointHoverRadius: 6
             }
-          }
+          ]
         },
-        scales: {
-          x: { grid: { color: grid }, ticks: { color: ticks, font: { size: 11 } } },
-          y: {
-            grid: { color: grid },
-            ticks: {
-              color: ticks,
-              font: { size: 11 },
-              callback: v => '$' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v)
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: dark ? '#1e293b' : '#fff',
+              titleColor: dark ? '#e2e8f0' : '#1e293b',
+              bodyColor: dark ? '#94a3b8' : '#475569',
+              borderColor: dark ? '#334155' : '#e2e8f0',
+              borderWidth: 1,
+              padding: 12,
+              callbacks: {
+                label: ctx => ` ${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: grid }, ticks: { color: ticks, font: { size: 11 } } },
+            y: {
+              grid: { color: grid },
+              ticks: {
+                color: ticks,
+                font: { size: 11 },
+                callback: v => '$' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v)
+              }
             }
           }
         }
-      }
-    });
+      });
+    } catch (e) {
+      console.warn('Revenue chart could not be initialized:', e);
+    }
   }
 
   /* ═══════════════════════════════════════════════════
@@ -250,26 +254,32 @@
 
     const colors = ['#f59e0b', '#4f46e5', '#10b981'];
 
-    if (projectChart) projectChart.destroy();
+    if (typeof Chart !== 'undefined') {
+      try {
+        if (projectChart) projectChart.destroy();
 
-    projectChart = new Chart(canvas.getContext('2d'), {
-      type: 'doughnut',
-      data: {
-        labels: Object.keys(statuses),
-        datasets: [{
-          data: Object.values(statuses),
-          backgroundColor: colors,
-          borderWidth: 0,
-          hoverOffset: 10
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '72%',
-        plugins: { legend: { display: false } }
+        projectChart = new Chart(canvas.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(statuses),
+            datasets: [{
+              data: Object.values(statuses),
+              backgroundColor: colors,
+              borderWidth: 0,
+              hoverOffset: 10
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: { legend: { display: false } }
+          }
+        });
+      } catch (e) {
+        console.warn('Project chart could not be initialized:', e);
       }
-    });
+    }
 
     const legEl = document.getElementById('projectLegend');
     if (legEl) {
